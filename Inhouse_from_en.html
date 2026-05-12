@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-house Training Request Form - NIMT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+
+        /* Date Picker */
+        .date-picker-wrapper { position: relative; }
+        .date-display {
+            width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem; cursor: pointer; background: white;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.875rem; color: #374151; transition: border-color 0.2s;
+        }
+        .date-display:hover { border-color: #3b82f6; }
+        .date-display.placeholder-text { color: #9ca3af; }
+        .calendar-popup {
+            display: none; position: absolute; top: calc(100% + 4px); left: 0;
+            z-index: 50; background: white; border: 1px solid #e5e7eb;
+            border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 1rem; width: 300px;
+        }
+        .calendar-popup.open { display: block; }
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .cal-nav-btn {
+            background: none; border: 1px solid #e5e7eb; border-radius: 0.375rem;
+            width: 28px; height: 28px; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; color: #374151;
+        }
+        .cal-nav-btn:hover { background: #f3f4f6; }
+        .cal-month-year { display: flex; gap: 6px; align-items: center; }
+        .cal-select {
+            border: 1px solid #e5e7eb; border-radius: 0.25rem; padding: 2px 6px;
+            font-size: 13px; font-weight: 600; cursor: pointer; background: white; color: #1e3a8a;
+        }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .cal-day-label { text-align: center; font-size: 11px; font-weight: 700; color: #6b7280; padding: 4px 0; }
+        .cal-day { text-align: center; font-size: 13px; padding: 6px 2px; border-radius: 0.375rem; cursor: pointer; color: #374151; }
+        .cal-day:hover { background: #dbeafe; color: #1e40af; }
+        .cal-day.today { font-weight: 700; color: #1e40af; }
+        .cal-day.selected { background: #1e3a8a; color: white; }
+        .cal-day.selected:hover { background: #1e40af; }
+        .cal-day.empty { cursor: default; }
+        .cal-day.empty:hover { background: none; }
+
+        .field-input {
+            width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem; outline: none; font-family: 'Sarabun', sans-serif;
+            font-size: 0.875rem; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .field-input:focus { border-color: #1e40af; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+        .field-textarea {
+            width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem; outline: none; resize: vertical; min-height: 72px;
+            font-family: 'Sarabun', sans-serif; font-size: 0.875rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .field-textarea:focus { border-color: #1e40af; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+        .field-label { display: block; font-size: 0.875rem; margin-bottom: 0.35rem; font-weight: 500; }
+        .section-title { font-weight: 700; color: #1d4ed8; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1rem; font-style: italic; }
+        .field-group { margin-bottom: 0; }
+    </style>
+    <script>
+        const storageKey = 'form_data_' + window.location.pathname.split('/').pop();
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem(storageKey);
+            if (!savedData) return;
+            const data = JSON.parse(savedData);
+            Object.entries(data).forEach(([name, value]) => {
+                const element = document.querySelector(`[name="${name}"]`);
+                if (!element) return;
+                if (element.type === 'checkbox') {
+                    element.checked = value === 'true' || value === 'on' || value === true;
+                } else if (element.type === 'radio') {
+                    const radio = document.querySelector(`[name="${name}"][value="${value}"]`);
+                    if (radio) radio.checked = true;
+                } else if (element.id === 'training_date_val' && value) {
+                    calendars['training'].setValue(value);
+                } else if (element.id === 'request_date_val' && value) {
+                    calendars['request'].setValue(value);
+                } else {
+                    element.value = value;
+                }
+            });
+        });
+        function saveFormData() {
+            const form = document.querySelector('form');
+            if (!form) return;
+            const data = {};
+            new FormData(form).forEach((value, key) => { data[key] = value; });
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+        document.addEventListener('input', saveFormData, true);
+        document.addEventListener('change', saveFormData, true);
+        document.addEventListener('submit', () => localStorage.removeItem(storageKey));
+    </script>
+</head>
+<body class="bg-gray-100 p-4 md:p-10">
+
+<div class="max-w-4xl mx-auto my-10 bg-white shadow-xl rounded-lg border border-gray-200">
+
+    <div class="p-8 pb-0">
+        <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6 text-[10px]">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-blue-900 flex items-center justify-center text-white font-bold rounded">LOGO</div>
+                <div class="space-y-1">
+                    <h1 class="text-base font-bold text-blue-900">สถาบันมาตรวิทยาแห่งชาติ</h1>
+                    <h2 class="text-[11px] font-semibold text-gray-600 uppercase tracking-tight">National Institute of Metrology (Thailand)</h2>
+                </div>
+            </div>
+            <div class="text-right space-y-1 text-gray-700">
+                <div class="font-bold text-black mb-1">Page 1/2</div>
+                <p>3/4-5 หมู่ 3 ตำบลคลองห้า อำเภอคลองหลวง จังหวัดปทุมธานี 12120</p>
+                <p>โทรศัพท์ 0 2026 5400 ต่อ 8301-3 อีเมล : training@nimt.or.th</p>
+                <p>3/4-5 Moo 3, Klong 5, Klong Luang, Pathumthani 12120</p>
+                <p>Tel. 0 2026 5400 ext. 8301-3 E-mail : training@nimt.or.th</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="p-8 pt-0">
+        <h2 class="text-2xl font-bold text-center mb-8 text-gray-700 underline underline-offset-8 decoration-blue-500">
+            In-house Training Request Form (International language)
+        </h2>
+
+        <section class="mb-10 overflow-x-auto">
+            <h3 class="font-semibold mb-4 flex items-center gap-2">
+                <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                In-house Training Fee (International language)
+            </h3>
+            <table class="w-full text-sm border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-200 p-3 text-center w-12">Type</th>
+                        <th class="border border-gray-200 p-3 text-center">Description</th>
+                        <th class="border border-gray-200 p-3 text-center">Registration fee per day (excluded VAT)</th>
+                        <th class="border border-gray-200 p-3 text-center">Additional charge per person per day (excluded VAT)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-200 p-3 text-center font-bold">A</td>
+                        <td class="border border-gray-200 p-3">Theoretical curriculum (up to 20 people)</td>
+                        <td class="border border-gray-200 p-3 text-right font-semibold">60,000 Baht</td>
+                        <td class="border border-gray-200 p-3 text-right font-semibold">3,000 Baht</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="border border-gray-200 p-3 text-center font-bold">B</td>
+                        <td class="border border-gray-200 p-3 italic">Theoretical and practical curriculum</td>
+                        <td class="border border-gray-200 p-3 text-right"></td>
+                        <td rowspan="2" class="border border-gray-200 p-3 text-right font-semibold">4,000 Baht</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-200 p-3 pl-6">
+                            I: 1 - 7 people<br>
+                            II: 8 - 15 people
+                        </td>
+                        <td class="border border-gray-200 p-3 text-right font-semibold">
+                            50,000 Baht<br>
+                            60,000 Baht
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mt-2 text-[10px] text-gray-600 italic leading-relaxed">
+                <p class="font-bold">Note: – This cost includes lecturer fee, training materials and certificate.</p>
+                <p>– All travel expenses of participant(s) and lecturer(s) including accommodation and full board will be taken care by customer.</p>
+            </div>
+        </section>
+
+        <form action="step1_session.php" method="POST" onsubmit="saveFormData()">
+            <input type="hidden" name="category" value="Inhouse-EN">
+            <input type="hidden" name="next_page" value="Inhouse_services_en.html">
+
+            <section>
+                <h3 class="section-title">Information for Receipt / Tax Invoice Issuance</h3>
+                <div class="space-y-4">
+                    <div class="field-group">
+                        <label class="field-label">Organization Name</label>
+                        <input type="text" name="company_name" required class="field-input">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Address for Receipt / Tax Invoice</label>
+                        <textarea name="billing_address" class="field-textarea"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="field-group">
+                            <label class="field-label">Tax ID Number</label>
+                            <input type="text" name="tax_id" class="field-input">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Head Office or Branch No.</label>
+                            <input type="text" name="branch_code" class="field-input">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Certificate Delivery Address</label>
+                        <input type="text" name="delivery_address" class="field-input">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3 class="section-title">Requested Training Course Details</h3>
+                <div class="space-y-4">
+                    <div class="field-group">
+                        <label class="field-label">Training Topic</label>
+                        <input type="text" name="course_title" required class="field-input">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="field-group">
+                            <label class="field-label">Lecturer (if you wish to specify)</label>
+                            <input type="text" name="instructor_name" class="field-input">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Number of Participants</label>
+                            <input type="number" name="participant_count" class="field-input">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="field-group">
+                            <label class="field-label">Training Date (Time: 09:00 – 16:30)</label>
+                            <input type="hidden" id="training_date_val" name="training_date" required>
+                            <div class="date-picker-wrapper" id="wrapper-training">
+                                <div class="date-display placeholder-text" id="dateDisplay-training" onclick="calendars['training'].toggle()">
+                                    <span id="dateText-training">Select date...</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                    </svg>
+                                </div>
+                                <div class="calendar-popup" id="popup-training">
+                                    <div class="cal-header">
+                                        <button type="button" class="cal-nav-btn" onclick="calendars['training'].changeMonth(-1)">&#8249;</button>
+                                        <div class="cal-month-year">
+                                            <select class="cal-select" id="monthSel-training" onchange="calendars['training'].onMonthChange()"></select>
+                                            <select class="cal-select" id="yearSel-training"  onchange="calendars['training'].onYearChange()"></select>
+                                        </div>
+                                        <button type="button" class="cal-nav-btn" onclick="calendars['training'].changeMonth(1)">&#8250;</button>
+                                    </div>
+                                    <div class="cal-grid" id="grid-training"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Venue</label>
+                            <input type="text" name="location" class="field-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3 class="section-title">Contact Person Information</h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="field-group">
+                            <label class="field-label">Full Name</label>
+                            <input type="text" name="contact_name" required class="field-input">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Position</label>
+                            <input type="text" name="contact_position" class="field-input">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="field-group">
+                            <label class="field-label">Contact Phone Number</label>
+                            <input type="tel" name="contact_phone" required class="field-input">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">E-mail</label>
+                            <input type="email" name="contact_email" required class="field-input">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="field-group">
+                            <label class="field-label">Date of Request</label>
+                            <input type="hidden" id="request_date_val" name="request_date">
+                            <div class="date-picker-wrapper" id="wrapper-request">
+                                <div class="date-display placeholder-text" id="dateDisplay-request" onclick="calendars['request'].toggle()">
+                                    <span id="dateText-request">Select date...</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                    </svg>
+                                </div>
+                                <div class="calendar-popup" id="popup-request">
+                                    <div class="cal-header">
+                                        <button type="button" class="cal-nav-btn" onclick="calendars['request'].changeMonth(-1)">&#8249;</button>
+                                        <div class="cal-month-year">
+                                            <select class="cal-select" id="monthSel-request" onchange="calendars['request'].onMonthChange()"></select>
+                                            <select class="cal-select" id="yearSel-request"  onchange="calendars['request'].onYearChange()"></select>
+                                        </div>
+                                        <button type="button" class="cal-nav-btn" onclick="calendars['request'].changeMonth(1)">&#8250;</button>
+                                    </div>
+                                    <div class="cal-grid" id="grid-request"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Ref No.</label>
+                            <input type="text" name="ref_no" class="field-input bg-gray-50 text-gray-500" readonly placeholder="For internal use">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="flex justify-center pt-4 no-print">
+                <button type="submit" class="bg-blue-900 text-white px-12 py-2.5 rounded-md shadow-sm font-bold hover:bg-blue-800 transition duration-200">
+                    Next Page
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <footer class="bg-gray-50 p-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 border-t border-gray-200 gap-2">
+        <div>&copy; 2026 National Institute of Metrology (Thailand).</div>
+        <div>Effective Date : 03/11/2025</div>
+    </footer>
+</div>
+
+<script>
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DAYS   = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+    const today  = new Date();
+
+    function createCalendar(key, hiddenInputId) {
+        const cal = {
+            key, hiddenInputId,
+            year: today.getFullYear(), month: today.getMonth(), selectedDate: null,
+
+            popup()     { return document.getElementById('popup-'       + key); },
+            grid()      { return document.getElementById('grid-'        + key); },
+            monthSel()  { return document.getElementById('monthSel-'    + key); },
+            yearSel()   { return document.getElementById('yearSel-'     + key); },
+            displayEl() { return document.getElementById('dateDisplay-' + key); },
+            textEl()    { return document.getElementById('dateText-'    + key); },
+            hiddenEl()  { return document.getElementById(hiddenInputId); },
+
+            buildSelects() {
+                const ms = this.monthSel();
+                MONTHS.forEach((m, i) => {
+                    const o = document.createElement('option');
+                    o.value = i; o.textContent = m;
+                    if (i === this.month) o.selected = true;
+                    ms.appendChild(o);
+                });
+                const ys = this.yearSel();
+                for (let y = today.getFullYear(); y <= today.getFullYear() + 5; y++) {
+                    const o = document.createElement('option');
+                    o.value = y; o.textContent = y;
+                    if (y === this.year) o.selected = true;
+                    ys.appendChild(o);
+                }
+            },
+
+            render() {
+                const grid = this.grid();
+                grid.innerHTML = '';
+                DAYS.forEach(d => {
+                    const el = document.createElement('div');
+                    el.className = 'cal-day-label'; el.textContent = d;
+                    grid.appendChild(el);
+                });
+                const firstDay    = new Date(this.year, this.month, 1).getDay();
+                const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+                for (let i = 0; i < firstDay; i++) {
+                    const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+                }
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const el = document.createElement('div'); el.className = 'cal-day'; el.textContent = d;
+                    const isToday = d === today.getDate() && this.month === today.getMonth() && this.year === today.getFullYear();
+                    if (isToday) el.classList.add('today');
+                    if (this.selectedDate &&
+                        d === this.selectedDate.getDate() &&
+                        this.month === this.selectedDate.getMonth() &&
+                        this.year  === this.selectedDate.getFullYear()) { el.classList.add('selected'); }
+                    el.addEventListener('click', () => this.selectDay(d));
+                    grid.appendChild(el);
+                }
+                this.monthSel().value = this.month;
+                this.yearSel().value  = this.year;
+            },
+
+            selectDay(d) {
+                this.selectedDate = new Date(this.year, this.month, d);
+                const display = `${MONTHS[this.month]} ${d}, ${this.year}`;
+                const value   = `${this.year}-${String(this.month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                this.textEl().textContent = display;
+                this.displayEl().classList.remove('placeholder-text');
+                this.hiddenEl().value = value;
+                this.popup().classList.remove('open');
+                saveFormData();
+            },
+
+            setValue(value) {
+                const parts = value.split('-');
+                if (parts.length !== 3) return;
+                const y = parseInt(parts[0]), m = parseInt(parts[1])-1, d = parseInt(parts[2]);
+                this.selectedDate = new Date(y, m, d);
+                this.year = y; this.month = m;
+                this.textEl().textContent = `${MONTHS[m]} ${d}, ${y}`;
+                this.displayEl().classList.remove('placeholder-text');
+                this.hiddenEl().value = value;
+                this.render();
+            },
+
+            toggle() {
+                Object.values(calendars).forEach(c => { if (c.key !== this.key) c.popup().classList.remove('open'); });
+                this.popup().classList.toggle('open');
+            },
+            changeMonth(dir) {
+                this.month += dir;
+                if (this.month < 0)  { this.month = 11; this.year--; }
+                if (this.month > 11) { this.month = 0;  this.year++; }
+                this.render();
+            },
+            onMonthChange() { this.month = parseInt(this.monthSel().value); this.render(); },
+            onYearChange()  { this.year  = parseInt(this.yearSel().value);  this.render(); },
+            init() { this.buildSelects(); this.render(); }
+        };
+        return cal;
+    }
+
+    const calendars = {
+        training: createCalendar('training', 'training_date_val'),
+        request:  createCalendar('request',  'request_date_val')
+    };
+    calendars.training.init();
+    calendars.request.init();
+
+    document.addEventListener('click', e => {
+        Object.values(calendars).forEach(cal => {
+            const wrapper = document.getElementById('wrapper-' + cal.key);
+            if (wrapper && !wrapper.contains(e.target)) cal.popup().classList.remove('open');
+        });
+    });
+    
+</script>
+</body>
+</html>

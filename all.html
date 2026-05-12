@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกแบบฟอร์ม NIMT | NIMT Form Selector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: "Sarabun", sans-serif; }</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-5xl bg-white shadow-2xl rounded-3xl border border-slate-200 overflow-hidden">
+            <div class="bg-blue-900 text-white p-8 sm:p-10">
+                <h1 class="text-2xl sm:text-3xl font-bold">แบบฟอร์ม NIMT <span class="text-base font-normal text-blue-100">(NIMT Forms)</span></h1>
+                <p class="mt-3 text-sm sm:text-base text-blue-100 max-w-2xl">เลือกแบบฟอร์มบริการด้านล่าง แล้วเลือกภาษาที่ต้องการใช้ <span class="block mt-2">Choose a service form below, then select the language you want to use.</span></p>
+            </div>
+            <div class="p-6 sm:p-10 space-y-6">
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div class="rounded-3xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition">
+                        <div class="mb-4">
+                            <h2 class="text-lg font-semibold text-slate-900">อบรมภายในองค์กร <br class="text-sm font-normal text-slate-500">(In-house Training)</br></h2>
+                            <p class="mt-2 text-sm text-slate-600">เปิดแบบฟอร์มขออบรมภายในองค์กร ภาษาไทยหรือภาษาอังกฤษ <span class="block text-xs text-slate-500">Open the in-house training request form in Thai or English.</span></p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="Inhouse_from.html" class="inline-flex items-center justify-center rounded-full bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">ไทย</a>
+                            <a href="Inhouse_from_en.html" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-100">English</a>
+                        </div>
+                    </div>
+                    <div class="rounded-3xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition">
+                        <div class="mb-4">
+                            <h2 class="text-lg font-semibold text-slate-900">คำปรึกษาด้านการวัดสาร <br class="text-sm font-normal text-slate-500">(Metrology Consulting)</br></h2>
+                            <p class="mt-2 text-sm text-slate-600">เปิดแบบฟอร์มขอคำปรึกษาด้านการวัดสาร ภาษาไทยหรือภาษาอังกฤษ <span class="block text-xs text-slate-500">Open the metrology consulting request form in Thai or English.</span></p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="metrology_form.html" class="inline-flex items-center justify-center rounded-full bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">ไทย</a>
+                            <a href="metrology_form_en.html" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-100">English</a>
+                        </div>
+                    </div>
+                    <div class="rounded-3xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition">
+                        <div class="mb-4">
+                            <h2 class="text-lg font-semibold text-slate-900">บรรยายเชิงวิชาการ <br class="text-sm font-normal text-slate-500">(Academic Lecture)</br></h2>
+                            <p class="mt-2 text-sm text-slate-600">เปิดแบบฟอร์มขอใช้บริการบรรยายเชิงวิชาการ ภาษาไทยหรือภาษาอังกฤษ <span class="block text-xs text-slate-500">Open the academic lecture request form in Thai or English.</span></p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="academic_form.html" class="inline-flex items-center justify-center rounded-full bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">ไทย</a>
+                            <a href="academic_form_en.html" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-100">English</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
+                    <p class="font-semibold text-slate-900">How to use</p>
+                    <ul class="mt-3 list-disc pl-5 space-y-2">
+                        <li>Click the form you want to open.</li>
+                        <li>Choose the language by clicking the Thai or English button.</li>
+                        <li>Your selected form will open in a new page.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

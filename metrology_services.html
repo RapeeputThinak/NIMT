@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบคำขอใช้บริการอื่นๆ เพิ่มเติม - NIMT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+        .table-custom th, .table-custom td { border: 1px solid #94a3b8; padding: 6px; text-align: center; }
+    </style>
+    <script>
+        const storageKey = 'form_data_' + window.location.pathname.split('/').pop();
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem(storageKey);
+            if (!savedData) return;
+            const data = JSON.parse(savedData);
+            Object.entries(data).forEach(([name, value]) => {
+                const element = document.querySelector(`[name="${name}"]`);
+                if (!element) return;
+                if (element.type === 'checkbox') {
+                    element.checked = value === 'true' || value === 'on' || value === true;
+                } else if (element.type === 'radio') {
+                    const radio = document.querySelector(`[name="${name}"][value="${value}"]`);
+                    if (radio) radio.checked = true;
+                } else {
+                    element.value = value;
+                }
+            });
+        });
+        function saveFormData() {
+            const form = document.querySelector('form');
+            if (!form) return;
+            const data = {};
+            new FormData(form).forEach((value, key) => {
+                data[key] = value;
+            });
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+        document.addEventListener('input', saveFormData, true);
+        document.addEventListener('change', saveFormData, true);
+        document.addEventListener('submit', () => localStorage.removeItem(storageKey));
+    </script>
+</head>
+<body class="bg-slate-50 p-4 md:p-10" onchange="saveFormData()" oninput="saveFormData()">
+    <form action="save_all_data.php" method="POST">
+        <input type="hidden" name="category" value="Metrology-TH">
+        <div class="max-w-4xl mx-auto bg-white p-12 shadow-lg border border-gray-200">
+            
+            <!-- ส่วน Header ข้อมูลสองภาษา -->
+            <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6 text-[10px]">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-blue-900 flex items-center justify-center text-white font-bold rounded">LOGO</div>
+                    <div class="space-y-1">
+                        <h1 class="text-base font-bold text-blue-900">สถาบันมาตรวิทยาแห่งชาติ</h1>
+                        <h2 class="text-[11px] font-semibold text-gray-600 uppercase tracking-tight">National Institute of Metrology (Thailand)</h2>
+                    </div>
+                </div>
+                <div class="text-right space-y-1 text-gray-700">
+                    <div class="font-bold text-black mb-1">หน้า 2/2</div>
+                    <p>3/4-5 หมู่ 3 ตำบลคลองห้า อำเภอคลองหลวง จังหวัดปทุมธานี 12120</p>
+                    <p>โทรศัพท์ 0 2026 5400 ต่อ 8301-3 อีเมล : training@nimt.or.th</p>
+                    <p>3/4-5 Moo 3, Klong 5, Klong Luang, Pathumthani 12120</p>
+                    <p>Tel. 0 2026 5400 ext. 8301-3 E-mail : training@nimt.or.th</p>
+                </div>
+            </div>
+
+            <h2 class="text-lg font-bold mb-6 text-center">แบบคำขอใช้บริการอื่นๆ เพิ่มเติม</h2>
+
+            <div class="mb-8">
+                <table class="w-full text-[11px] border-collapse table-custom">
+                    <thead>
+                        <tr class="bg-gray-50"><th colspan="3" class="font-bold">อัตราค่าธรรมเนียมค่าพาหนะเดินทาง ที่พักและอาหาร</th></tr>
+                        <tr class="font-bold">
+                            <td class="w-1/3">ประเภท</td>
+                            <td>อัตราค่าบริการเหมาจ่ายต่อวัน (รวม VAT)</td>
+                            <td>อัตราค่าบริการเหมาจ่ายต่อคน (รวม VAT)</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="font-bold bg-gray-50"><td colspan="3" class="text-left">จัดฝึกอบรม ณ สถานประกอบการของหน่วยงานผู้ใช้บริการ</td></tr>
+                        <tr>
+                            <td class="text-left">ค่าพาหนะ</td>
+                            <td class="p-0">
+                                <div class="grid grid-cols-2 h-full">
+                                    <div class="border-r border-gray-400 p-2">ค่าเช่าพาหนะ<br>2,500 บาท</div>
+                                    <div class="p-2">ค่าน้ำมันต่อกิโลเมตร<br>6 บาท</div>
+                                </div>
+                            </td>
+                            <td>ค่าตั๋วเครื่องบิน (ไป-กลับ)<br>15,000 บาท</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">ค่าที่พัก (ต่อคนต่อคืน)</td>
+                            <td colspan="2">1,600 บาท</td>
+                        </tr>
+                        <tr class="font-bold bg-gray-50"><td colspan="3" class="text-left">จัดฝึกอบรม ณ สถาบันมาตรวิทยาแห่งชาติ</td></tr>
+                        <tr>
+                            <td class="text-left">ค่าอาหารและเครื่องดื่ม (ต่อคนต่อวัน)</td>
+                            <td colspan="2">900 บาท</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">ค่าบริการใช้ห้องอบรม และอุปกรณ์ต่างๆ (ต่อวัน)</td>
+                            <td colspan="2" class="p-0 text-[10px]">
+                                <div class="grid grid-cols-4 h-full">
+                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 20 คน<br>3,210 บาท</div>
+                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 30 คน<br>4,815 บาท</div>
+                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 40 คน<br>5,350 บาท</div>
+                                    <div class="p-1">ไม่เกิน 60 คน<br>6,420 บาท</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-[10px] mt-1 font-bold italic">หมายเหตุ : สำหรับการจัดอบรม ณ สถาบันฯ ผู้ขอใช้บริการสามารถเลือกได้ว่าจะรับบริการอาหารและเครื่องดื่ม หรือจัดเตรียมมาเอง</p>
+            </div>
+
+            <div class="space-y-6 text-sm mb-10">
+                <div>
+                    <p class="font-bold mb-2">กรณีต้องการให้สถาบันฯ เป็นผู้ดำเนินการจัดหาบริการพาหนะเดินทาง ที่พัก อาหารและเครื่องดื่ม</p>
+                    <div class="flex gap-8 ml-4">
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="arrange_service" value="ต้องการ" required> ต้องการขอใช้บริการ</label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="arrange_service" value="ไม่ต้องการ"> ไม่ต้องการขอใช้บริการ</label>
+                    </div>
+                </div>
+
+                <div class="ml-4 space-y-4">
+                    <p class="font-bold underline italic">เลือกบริการที่ต้องการ</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-4 border border-slate-200 rounded">
+                            <p class="font-bold border-b mb-2 pb-1 text-xs uppercase">ณ สถานที่ประกอบการของหน่วยงานผู้ใช้บริการ</p>
+                            <label class="flex items-center gap-2 mb-2"><input type="checkbox" name="site_vehicle" value="ใช่"> พาหนะ</label>
+                            <label class="flex items-start gap-2"><input type="checkbox" name="site_hotel" value="ใช่" class="mt-1"> <span>ที่พัก (ยกเว้นอาหารกลางวันของวิทยากรผู้ขอใช้บริการเป็นผู้จัดหา)</span></label>
+                        </div>
+                        <div class="bg-slate-50 p-4 border border-slate-200 rounded">
+                            <p class="font-bold border-b mb-2 pb-1 text-xs uppercase">ณ สถาบันมาตรวิทยาแห่งชาติ</p>
+                            <label class="flex items-center gap-2 mb-2"><input type="checkbox" name="nimt_room" value="ใช่"> ห้องอบรม และอุปกรณ์ต่างๆ</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="nimt_food" value="ใช่"> อาหารและเครื่องดื่ม</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t-2 border-gray-200 pt-6 space-y-4">
+                <div>
+                    <p class="font-bold text-[11px] mb-2 underline">หมายเหตุ:</p>
+                    <div class="text-[11px] italic space-y-2 font-semibold ml-4">
+                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> สถาบันมาตรวิทยาแห่งชาติ ขอสงวนสิทธิ์ในการจัดสรรวิทยากรตามความเหมาะสม</label>
+                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> สถาบันฯ จะสรุปรายละเอียดค่าธรรมเนียมอบรมนอกสถานที่ เพื่อยืนยันการขอใช้บริการและชำระเงิน ผ่าน e-mail ผู้ติดต่อ</label>
+                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> อัตราค่าธรรมเนียมนี้เป็นอัตราที่กำหนดตามระเบียบของสถาบันฯ ไม่สามารถเปลี่ยนแปลงหรือปรับลดได้</label>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 border-l-4 border-blue-900 mt-6">
+                    <p class="font-bold text-xs mb-2">การเปิดเผยข้อมูลแก่สถาบันมาตรวิทยาแห่งชาติ</p>
+                    <label class="flex items-center gap-2 text-xs font-bold italic cursor-pointer">
+                        <input type="radio" name="privacy_consent" value="ยินยอม" required> ข้าพเจ้ายินยอมเปิดเผยข้อมูล เพื่อใช้ในการติดต่อประสานงานและออกใบเสร็จรับเงิน/ใบกำกับภาษี
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="metrology_form.html" onclick="saveFormData()" class="bg-gray-400 text-white px-8 py-2 rounded shadow hover:bg-gray-500 font-bold transition">ย้อนกลับ</a>
+                <button type="submit" class="bg-green-900 text-white px-10 py-2 rounded shadow hover:bg-green-800 font-bold transition">ส่งแบบคำขอรับคำปรึกษา</button>
+            </div>
+            
+            <div class="flex justify-between items-end text-[10px] text-gray-500 mt-8 pt-4 border-t border-gray-200">
+                <div>สถาบันมาตรวิทยาแห่งชาติ</div>
+                <div>Effective Date : 03/11/2025</div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

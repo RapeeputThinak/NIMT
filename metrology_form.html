@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบขอคำใช้บริการให้คำปรึกษา - NIMT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Sarabun', sans-serif; }</style>
+    <script>
+        const storageKey = 'form_data_' + window.location.pathname.split('/').pop();
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem(storageKey);
+            if (!savedData) return;
+            const data = JSON.parse(savedData);
+            Object.entries(data).forEach(([name, value]) => {
+                const element = document.querySelector(`[name="${name}"]`);
+                if (!element) return;
+                if (element.type === 'checkbox') {
+                    element.checked = value === 'true' || value === 'on' || value === true;
+                } else if (element.type === 'radio') {
+                    const radio = document.querySelector(`[name="${name}"][value="${value}"]`);
+                    if (radio) radio.checked = true;
+                } else {
+                    element.value = value;
+                }
+            });
+        });
+
+        function saveFormData() {
+            const form = document.querySelector('form');
+            if (!form) return;
+            const data = {};
+            new FormData(form).forEach((value, key) => {
+                data[key] = value;
+            });
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+
+        document.addEventListener('input', saveFormData, true);
+        document.addEventListener('change', saveFormData, true);
+
+        // แก้ไขฟังก์ชันส่งข้อมูล (AJAX Submit)
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return false;
+            }
+
+            saveFormData();
+
+            // ส่งข้อมูลไปเซิร์ฟเวอร์แบบเบื้องหลัง
+            try {
+                const formData = new FormData(form);
+                await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (err) {
+                console.error('Error saving data:', err);
+            }
+
+            // เปลี่ยนหน้าไปยังหน้าที่กำหนดใน next_page หรือระบุโดยตรง
+            const nextPage = form.querySelector('[name="next_page"]')?.value || 'metrology_services.html';
+            window.location.href = nextPage;
+        }
+    </script>
+</head>
+<body class="bg-slate-50 p-4 md:p-10 text-gray-800 antialiased" onchange="saveFormData()" oninput="saveFormData()">
+
+    <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 shadow-lg border border-gray-200 rounded-xl">
+        
+        <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6 text-[10px]">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-blue-900 flex items-center justify-center text-white font-bold rounded">LOGO</div>
+                <div class="space-y-1">
+                    <h1 class="text-base font-bold text-blue-900">สถาบันมาตรวิทยาแห่งชาติ</h1>
+                    <h2 class="text-[11px] font-semibold text-gray-600 uppercase tracking-tight">National Institute of Metrology (Thailand)</h2>
+                </div>
+            </div>
+            <div class="text-right space-y-1 text-gray-700">
+                <div class="font-bold text-black mb-1">หน้า 1/2</div>
+                <p>3/4-5 หมู่ 3 ตำบลคลองห้า อำเภอคลองหลวง จังหวัดปทุมธานี 12120</p>
+                <p>โทรศัพท์ 0 2026 5400 ต่อ 8301-3 อีเมล : training@nimt.or.th</p>
+                <p>3/4-5 Moo 3, Klong 5, Klong Luang, Pathumthani 12120</p>
+                <p>Tel. 0 2026 5400 ext. 8301-3 E-mail : training@nimt.or.th</p>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-center mb-8 text-gray-700 underline underline-offset-8 decoration-blue-500">แบบขอคำใช้บริการให้คำปรึกษาด้านมาตรวิทยา</h2>
+
+        <form action="step1_session.php" method="POST" onsubmit="return handleSubmit(event)" class="space-y-10">
+            <input type="hidden" name="category" value="Metrology-TH">
+            <input type="hidden" name="next_page" value="metrology_services.html">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-full border-b pb-2"><h3 class="font-semibold text-blue-700">ข้อมูลสำหรับออกใบเสร็จรับเงิน/ใบกำกับภาษี</h3></div>
+                <div class="col-span-full">
+                    <label class="block text-sm mb-1 font-bold">ชื่อหน่วยงาน</label>
+                    <input type="text" name="company_name" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div class="col-span-full">
+                    <label class="block text-sm mb-1 font-bold">ที่อยู่สำหรับออกใบเสร็จรับเงิน/ใบกำกับภาษี</label>
+                    <textarea name="billing_address" rows="2" class="w-full border-gray-300 rounded-md shadow-sm p-2 border"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">เลขประจำตัวผู้เสียภาษีของหน่วยงาน</label>
+                    <input type="text" name="tax_id" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">สำนักงานใหญ่/สาขาเลขที่</label>
+                    <input type="text" name="branch_code" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-full border-b pb-2"><h3 class="font-semibold text-blue-700">หัวข้อที่ต้องการขอใช้บริการ</h3></div>
+                <div class="col-span-full">
+                    <label class="block text-sm mb-1 font-bold">หัวข้อที่ต้องการรับคำปรึกษา</label>
+                    <input type="text" name="course_title" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div class="col-span-full">
+                    <label class="block text-sm mb-1 font-bold">เครื่องมือ/ห้องปฏิบัติการ</label>
+                    <input type="text" name="lab_tool" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">วิทยากร (หากต้องการระบุ)</label>
+                    <input type="text" name="speaker_name" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">จำนวนผู้เข้าร่วม (คน)</label>
+                    <input type="number" name="participant_count" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">วันที่ให้คำปรึกษา (เวลา 09.00 - 16.30 น.)</label>
+                    <input type="date" name="training_date" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">สถานที่จัด</label>
+                    <input type="text" name="location" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-full border-b pb-2"><h3 class="font-semibold text-blue-700">ข้อมูลผู้ติดต่อ</h3></div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">ชื่อ-นามสกุล</label>
+                    <input type="text" name="contact_name" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">ตำแหน่ง</label>
+                    <input type="text" name="contact_position" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">หมายเลขโทรศัพท์ที่สะดวกติดต่อ</label>
+                    <input type="tel" name="contact_phone" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">E-mail</label>
+                    <input type="email" name="contact_email" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">วันที่แจ้งขอใช้บริการ</label>
+                    <input type="date" name="request_date" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1 font-bold">เลขที่อ้างอิง</label>
+                    <input type="text" name="reference_no" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                </div>
+            </div>
+
+            <div class="flex justify-center pt-6">
+                <button type="submit" class="bg-blue-900 text-white px-12 py-2.5 rounded-md shadow-sm font-bold hover:bg-blue-800 transition duration-200">ถัดไป</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

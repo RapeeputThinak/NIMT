@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Additional Services Request - NIMT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Sarabun', sans-serif; }</style>
+    <script>
+        const storageKey = 'form_data_' + window.location.pathname.split('/').pop();
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem(storageKey);
+            if (!savedData) return;
+            const data = JSON.parse(savedData);
+            Object.entries(data).forEach(([name, value]) => {
+                const element = document.querySelector(`[name="${name}"]`);
+                if (!element) return;
+                if (element.type === 'checkbox') {
+                    element.checked = value === 'true' || value === 'on' || value === true;
+                } else if (element.type === 'radio') {
+                    const radio = document.querySelector(`[name="${name}"][value="${value}"]`);
+                    if (radio) radio.checked = true;
+                } else {
+                    element.value = value;
+                }
+            });
+        });
+        function saveFormData() {
+            const form = document.querySelector('form');
+            if (!form) return;
+            const data = {};
+            new FormData(form).forEach((value, key) => {
+                data[key] = value;
+            });
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+        document.addEventListener('input', saveFormData, true);
+        document.addEventListener('change', saveFormData, true);
+        document.addEventListener('submit', () => localStorage.removeItem(storageKey));
+    </script>
+</head>
+<body class="bg-slate-50 text-gray-800 antialiased" onchange="saveFormData()" oninput="saveFormData()">
+
+    <div class="max-w-4xl mx-auto my-10 bg-white shadow-xl rounded-lg overflow-hidden border border-gray-200">
+        
+        <div class="p-8 pb-0">
+            <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6 text-[10px]">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-blue-900 flex items-center justify-center text-white font-bold rounded">LOGO</div>
+                    <div class="space-y-1">
+                        <h1 class="text-base font-bold text-blue-900">สถาบันมาตรวิทยาแห่งชาติ</h1>
+                        <h2 class="text-[11px] font-semibold text-gray-600 uppercase tracking-tight">National Institute of Metrology (Thailand)</h2>
+                    </div>
+                </div>
+                <div class="text-right space-y-1 text-gray-700">
+                    <div class="font-bold text-black mb-1">Page 2/2</div>
+                    <p>3/4-5 หมู่ 3 ตำบลคลองห้า อำเภอคลองหลวง จังหวัดปทุมธานี 12120</p>
+                    <p>โทรศัพท์ 0 2026 5400 ต่อ 8301-3 อีเมล : training@nimt.or.th</p>
+                    <p>3/4-5 Moo 3, Klong 5, Klong Luang, Pathumthani 12120</p>
+                    <p>Tel. 0 2026 5400 ext. 8301-3 E-mail : training@nimt.or.th</p>
+                </div>
+            </div>
+        </div>
+
+        <main class="p-8 pt-0">
+            <h2 class="text-2xl font-bold text-center mb-8 text-gray-700 underline underline-offset-8 decoration-blue-500 uppercase">Request for Additional Services</h2>
+
+            <section class="mb-10 overflow-x-auto">
+                <h3 class="font-semibold mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                    Fees for transportation, accommodation, and meals (Only for Domestic)
+                </h3>
+                <table class="w-full text-[11px] border-collapse border border-gray-200 text-center">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border border-gray-200 p-2">Type</th>
+                            <th class="border border-gray-200 p-2">Service Fee per Day (excluding VAT) in THB</th>
+                            <th class="border border-gray-200 p-2">Service Fee per Person (excluding VAT) in THB</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-200 p-2 text-left">Local Transportation fee</td>
+                            <td class="border border-gray-200 p-0">
+                                <div class="grid grid-cols-2 h-full">
+                                    <div class="border-r border-gray-200 p-2">Vehicle rental fee (per vehicle): <br><span>2,336.45</span></div>
+                                    <div class="p-2">Fuel charge per km: <br><span>5.61</span></div>
+                                </div>
+                            </td>
+                            <td class="border border-gray-200 p-2">Air Travel Expenses (Round-trip): <br><span>14,018.69</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-200 p-2 text-left italic">Accommodation fee (per person per night)</td>
+                            <td colspan="2" class="border border-gray-200 p-2">1,495.33</td>
+                        </tr>
+                        <tr class="bg-blue-50">
+                            <td colspan="3" class="border border-gray-200 p-2 text-left font-bold italic">** In case of using the services of the National Institute of Metrology (Thailand) facilities</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-200 p-2 text-left italic">Food and beverage cost (per person per day)</td>
+                            <td colspan="2" class="border border-gray-200 p-2">841.12</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-200 p-2 text-left italic">Training room, and equipment rental fee per day</td>
+                            <td colspan="2" class="border border-gray-200 p-0">
+                                <div class="grid grid-cols-4 text-[10px]">
+                                    <div class="border-r border-gray-200 p-2">Up to 20 people: <br><span>3,000</span></div>
+                                    <div class="border-r border-gray-200 p-2">Up to 30 people: <br><span>4,500</span></div>
+                                    <div class="border-r border-gray-200 p-2">Up to 40 people: <br><span>5,000</span></div>
+                                    <div class="p-2">Up to 60 people: <br><span>6,000</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-2 text-[10px] text-gray-500 italic leading-relaxed">
+                    <p>Note: - For training conducted at NIMT, customers may choose to use the food and beverage service or arrange for their own catering.</p>
+                    <p>- For domestic transactions, the specified fees are subject to an additional 7% Value Added Tax (VAT).</p>
+                </div>
+            </section>
+
+            <form action="save_all_data.php" method="POST" class="space-y-8">
+                <input type="hidden" name="category" value="Inhouse-EN">
+                
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <p class="font-bold text-blue-900 mb-4 text-sm">In case of requiring NIMT to arrange transportation, accommodation, food, and beverages services:</p>
+                    <div class="flex flex-col gap-3">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="arrange_service" value="Yes" required class="w-4 h-4 text-blue-600">
+                            <span class="text-sm font-medium">Yes, I request the arrangement of services.</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="arrange_service" value="No" class="w-4 h-4 text-blue-600">
+                            <span class="text-sm font-medium">No, I do not request the arrangement of services.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <p class="text-sm font-bold underline italic">If yes, please select the desired services:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="border p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-bold text-sm mb-3 text-blue-800">At the service user's premises</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="checkbox" name="site_vehicle" value="Yes" class="rounded text-blue-600"> Vehicle
+                                </label>
+                                <label class="flex items-start gap-2 text-sm">
+                                    <input type="checkbox" name="site_hotel" value="Yes" class="rounded text-blue-600 mt-1"> <span>Accommodation <br><span class="text-gray-500">(Lunch for the speaker requesting the service is to be provided by the speaker)</span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="border p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-bold text-sm mb-3 text-blue-800">At the National Institute of Metrology (Thailand)</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="checkbox" name="nimt_room" value="Yes" class="rounded text-blue-600"> Training Room and Equipment
+                                </label>
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="checkbox" name="nimt_food" value="Yes" class="rounded text-blue-600"> Food and Beverage
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2 border-t pt-4">
+                    <p class="text-xs font-bold underline">Remarks:</p>
+                    <div class="space-y-2 text-[11px] text-gray-700 italic">
+                        <label class="flex items-start gap-2">
+                            <input type="checkbox" required class="mt-1"> NIMT reserves the right to assign a lecturer as deemed appropriate.
+                        </label>
+                        <label class="flex items-start gap-2">
+                            <input type="checkbox" required class="mt-1"> NIMT will send a summary of the in-house training fees to the contact person's e-mail for service confirmation and payment.
+                        </label>
+                        <label class="flex items-start gap-2">
+                            <input type="checkbox" required class="mt-1"> All fee rates are fixed and non-negotiable.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="border-t pt-6">
+                    <p class="text-sm font-bold underline italic mb-4">Disclosure of information to the National Institute of Metrology (Thailand)</p>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="radio" name="privacy_consent" value="I agree" required class="w-4 h-4 text-blue-600 mt-1">
+                        <span class="text-sm font-bold">I agree to disclose my information for use in contacting and coordinating and issuing receipts/tax invoices.</span>
+                    </label>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-8 pb-2 no-print">
+                    <a href="Inhouse_from_en.html" onclick="saveFormData()" class="w-full sm:w-auto bg-gray-400 hover:bg-gray-500 text-white font-bold py-2.5 px-10 rounded-md shadow-sm transition duration-200 text-center text-[15px]">
+                        Back
+                    </a>
+                    <button type="submit" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 px-12 rounded-md shadow-sm transition duration-200 flex justify-center items-center gap-2 text-[15px]">
+                        Submit Request
+                    </button>
+                </div>
+            </form>
+        </main>
+
+        <footer class="bg-gray-50 p-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 border-t border-gray-200 gap-2">
+            <div>&copy; 2026 National Institute of Metrology (Thailand).</div>
+            <div>Effective Date : 03/11/2025</div>
+        </footer>
+    </div>
+
+</body>
+</html>
