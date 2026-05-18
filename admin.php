@@ -10,9 +10,10 @@ if ($conn->connect_error) {
 // ตั้งค่าภาษาไทยให้แสดงผลถูกต้อง
 $conn->set_charset("utf8");
 
-// รับค่าตัวกรองปีงบประมาณและหมวดหมู่
+// รับค่าตัวกรองปีงบประมาณ หมวดหมู่ และเดือน
 $fiscalYear = $_GET['fiscal_year'] ?? '';
 $category = $_GET['category'] ?? ''; // ใช้จาก Sidebar แทน Dropdown
+$month = $_GET['month'] ?? ''; // เดือนที่เลือก
 
 $whereClauses = [];
 if (!empty($fiscalYear)) {
@@ -20,6 +21,10 @@ if (!empty($fiscalYear)) {
 }
 if (!empty($category)) {
     $whereClauses[] = "category = '" . $conn->real_escape_string($category) . "'";
+}
+if (!empty($month)) {
+    // กรองตามเดือนของ training_date
+    $whereClauses[] = "MONTH(training_date) = " . intval($month);
 }
 
 $whereSql = '';
@@ -102,16 +107,36 @@ $currentCategoryName = $categories[$category] ?? 'รายการทั้ง
                 <span class="text-sm text-gray-500">พบข้อมูลทั้งหมด <?= $result->num_rows ?> รายการ</span>
             </div>
             
-            <!-- ตัวกรองปีงบประมาณ -->
-            <form method="get" class="flex items-center gap-3">
+            <!-- ตัวกรองปีงบประมาณ และเดือน -->
+            <form method="get" class="flex items-center gap-3 flex-wrap">
                 <input type="hidden" name="category" value="<?= htmlspecialchars($category) ?>">
-                <label class="text-sm text-gray-600 font-medium">ปีงบประมาณ:</label>
-                <select name="fiscal_year" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500" onchange="this.form.submit()">
-                    <option value="">ทั้งหมด</option>
-                    <?php foreach (['2023-2024','2024-2025','2025-2026','2026-2027','2027-2028','2028-2029','2029-2030'] as $fy): ?>
-                        <option value="<?= $fy ?>" <?= $fiscalYear === $fy ? 'selected' : '' ?>><?= $fy ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-gray-600 font-medium">ปีงบประมาณ:</label>
+                    <select name="fiscal_year" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500" onchange="this.form.submit()">
+                        <option value="">ทั้งหมด</option>
+                        <?php foreach (['2023-2024','2024-2025','2025-2026','2026-2027','2027-2028','2028-2029','2029-2030'] as $fy): ?>
+                            <option value="<?= $fy ?>" <?= $fiscalYear === $fy ? 'selected' : '' ?>><?= $fy ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-gray-600 font-medium">เดือน:</label>
+                    <select name="month" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500" onchange="this.form.submit()">
+                        <option value="">ทั้งหมด</option>
+                        <option value="1" <?= $month === '1' ? 'selected' : '' ?>>มกราคม</option>
+                        <option value="2" <?= $month === '2' ? 'selected' : '' ?>>กุมภาพันธ์</option>
+                        <option value="3" <?= $month === '3' ? 'selected' : '' ?>>มีนาคม</option>
+                        <option value="4" <?= $month === '4' ? 'selected' : '' ?>>เมษายน</option>
+                        <option value="5" <?= $month === '5' ? 'selected' : '' ?>>พฤษภาคม</option>
+                        <option value="6" <?= $month === '6' ? 'selected' : '' ?>>มิถุนายน</option>
+                        <option value="7" <?= $month === '7' ? 'selected' : '' ?>>กรกฎาคม</option>
+                        <option value="8" <?= $month === '8' ? 'selected' : '' ?>>สิงหาคม</option>
+                        <option value="9" <?= $month === '9' ? 'selected' : '' ?>>กันยายน</option>
+                        <option value="10" <?= $month === '10' ? 'selected' : '' ?>>ตุลาคม</option>
+                        <option value="11" <?= $month === '11' ? 'selected' : '' ?>>พฤศจิกายน</option>
+                        <option value="12" <?= $month === '12' ? 'selected' : '' ?>>ธันวาคม</option>
+                    </select>
+                </div>
                 <a href="?category=<?= htmlspecialchars($category) ?>" class="text-sm text-gray-500 hover:text-blue-600 underline">ล้างค่า</a>
             </form>
         </header>
@@ -125,6 +150,7 @@ $currentCategoryName = $categories[$category] ?? 'รายการทั้ง
                             <tr class="bg-gray-50 text-gray-700 text-sm border-b">
                                 <th class="p-4 font-semibold">วันที่สมัคร</th>
                                 <th class="p-4 font-semibold">หน่วยงาน</th>
+                                <th class="p-4 font-semibold">เบอร์โทร</th>
                                 <th class="p-4 font-semibold">หลักสูตร</th>
                                 <th class="p-4 font-semibold">วันที่อบรม</th>
                                 <th class="p-4 font-semibold text-center">ปีงบประมาณ</th>
@@ -141,6 +167,7 @@ $currentCategoryName = $categories[$category] ?? 'รายการทั้ง
                                         <div class="text-xs text-gray-400"><?= date('H:i', strtotime($row['created_at'])) ?> น.</div>
                                     </td>
                                     <td class="p-4 font-medium text-gray-800"><?= htmlspecialchars($row['company_name'] ?? 'ไม่ระบุ') ?></td>
+                                    <td class="p-4 text-blue-600 font-medium"><?= htmlspecialchars($row['contact_phone'] ?? 'ไม่ระบุ') ?></td>
                                     <td class="p-4 text-gray-600">
                                         <?= htmlspecialchars($row['course_title'] ?? 'ไม่ระบุ') ?>
                                         <?php if($category === ''): // แสดง tag หมวดหมู่เฉพาะตอนอยู่หน้า "ทั้งหมด" ?>

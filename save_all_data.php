@@ -126,11 +126,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             // ล้าง Session ทั้งหมดหลังจากบันทึกและส่งเมลสำเร็จ
             session_destroy();
-            echo "<script>alert('ส่งคำขอเรียบร้อยแล้ว! เจ้าหน้าที่จะติดต่อกลับทางอีเมล'); window.location.href='admin.php';</script>";
+            echo "<script>alert('ส่งคำขอเรียบร้อยแล้ว! เจ้าหน้าที่จะติดต่อกลับทางอีเมล'); window.location.href='success.html';</script>";
         } catch (Exception $e) {
             // กรณีบันทึกสำเร็จแต่ส่งเมลล้มเหลว
             session_destroy();
-            echo "<script>alert('บันทึกข้อมูลสำเร็จ แต่เกิดข้อผิดพลาดในการส่งอีเมลยืนยัน'); window.location.href='admin.php';</script>";
+            echo "<script>alert('บันทึกข้อมูลสำเร็จ แต่เกิดข้อผิดพลาดในการส่งอีเมลยืนยัน'); window.location.href='success.html';</script>";
         }
     } else {
         // แจ้งข้อผิดพลาดให้ชัดเจนขึ้น

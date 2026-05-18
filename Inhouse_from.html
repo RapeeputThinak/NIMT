@@ -61,8 +61,8 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .field-textarea:focus { border-color: #1e40af; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
-        .field-label { display: block; font-size: 0.875rem; margin-bottom: 0.35rem; font-weight: 500; }
-        .section-title { font-weight: 700; color: #1d4ed8; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1rem; font-style: italic; }
+        .field-label { display: block; font-size: 0.875rem; margin-bottom: 0.35rem; font-weight: 600; color: #374151; }
+        .section-title { font-weight: 700; color: #1d4ed8; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1.25rem; font-size: 1.125rem; }
         .field-group { margin-bottom: 0; }
     </style>
     <script>
@@ -101,7 +101,6 @@
         
         function handleSubmit(e) {
             const form = e.target;
-            // ตรวจสอบช่องวันที่ด้วย JS แทนการใช้ required ใน HTML
             const tDate = document.getElementById('training_date_val');
             if(tDate && !tDate.value) {
                 alert('กรุณาเลือกวันที่อบรม / Please select training date');
@@ -114,7 +113,7 @@
                 return false; 
             }
             saveFormData();
-            return true; // ยอมให้ Form วิ่งไปที่ step1_session.php
+            return true; 
         }
     </script>
 </head>
@@ -148,7 +147,7 @@
         </h2>
 
         <!-- ตารางอัตราค่าธรรมเนียม -->
-        <section class="mb-10 overflow-x-auto">
+        <section class="mb-12 overflow-x-auto">
             <h3 class="font-semibold mb-4 flex items-center gap-2">
                 <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
                 อัตราค่าธรรมเนียมอบรมนอกสถานที่
@@ -189,15 +188,15 @@
             </table>
         </section>
 
-        <!-- แบบฟอร์ม -->
-        <form action="step1_session.php" method="POST" onsubmit="return handleSubmit(event)">
+        <!-- แบบฟอร์มเพิ่ม space-y-12 จัดช่องว่างระหว่าง Section ให้กว้างขึ้น -->
+        <form action="step1_session.php" method="POST" onsubmit="return handleSubmit(event)" class="space-y-12">
             <input type="hidden" name="category" value="Inhouse-TH">
             <input type="hidden" name="next_page" value="Inhouse_services.html">
 
             <!-- ข้อมูลสำหรับออกใบเสร็จ -->
             <section>
                 <h3 class="section-title">ข้อมูลสำหรับออกใบเสร็จรับเงิน/ใบกำกับภาษี</h3>
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <div class="field-group">
                         <label class="field-label">ชื่อหน่วยงาน</label>
                         <input type="text" name="company_name" required class="field-input">
@@ -206,7 +205,7 @@
                         <label class="field-label">ที่อยู่สำหรับออกใบเสร็จ/ใบกำกับภาษี</label>
                         <textarea name="billing_address" class="field-textarea"></textarea>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="field-group">
                             <label class="field-label">เลขประจำตัวผู้เสียภาษี</label>
                             <input type="text" name="tax_id" class="field-input">
@@ -222,13 +221,12 @@
             <!-- หลักสูตรที่ต้องการ -->
             <section>
                 <h3 class="section-title">หลักสูตรที่ต้องการขอใช้บริการ</h3>
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <div class="field-group">
                         <label class="field-label">หัวข้ออบรม</label>
-                        <!-- ชื่อตัวแปร course_title ถูกต้องแล้ว -->
                         <input type="text" name="course_title" required class="field-input">
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="field-group">
                             <label class="field-label">วิทยากร (หากต้องการระบุ)</label>
                             <input type="text" name="instructor_name" class="field-input">
@@ -238,10 +236,9 @@
                             <input type="number" name="participant_count" class="field-input">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="field-group">
                             <label class="field-label">วันที่อบรม (09.00 – 16.30 น.)</label>
-                            <!-- เอา required ออก เพื่อกันบั๊ก HTML5 -->
                             <input type="hidden" id="training_date_val" name="training_date">
                             <div class="date-picker-wrapper" id="wrapper-training">
                                 <div class="date-display placeholder-text" id="dateDisplay-training" onclick="calendars['training'].toggle()">
@@ -274,8 +271,8 @@
             <!-- ข้อมูลผู้ติดต่อ -->
             <section>
                 <h3 class="section-title">ข้อมูลผู้ติดต่อ</h3>
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="field-group">
                             <label class="field-label">ชื่อ-นามสกุล</label>
                             <input type="text" name="contact_name" required class="field-input">
@@ -285,7 +282,7 @@
                             <input type="text" name="contact_position" class="field-input">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="field-group">
                             <label class="field-label">หมายเลขโทรศัพท์</label>
                             <input type="tel" name="contact_phone" required class="field-input">
@@ -295,7 +292,7 @@
                             <input type="email" name="contact_email" required class="field-input">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="field-group">
                             <label class="field-label">วันที่แจ้งขอใช้บริการ</label>
                             <input type="hidden" id="request_date_val" name="request_date">
@@ -327,9 +324,9 @@
                 </div>
             </section>
 
-            <!-- ปุ่มที่ปรับความโค้งมนให้เหมือนหน้าอื่น -->
-            <div class="flex justify-center pt-4 no-print">
-                <button type="submit" class="bg-blue-900 text-white px-12 py-2.5 rounded-md shadow-sm font-bold hover:bg-blue-800 transition duration-200">
+            <!-- ปุ่ม -->
+            <div class="flex justify-center pt-8 pb-4 no-print border-t border-gray-100">
+                <button type="submit" class="bg-blue-900 text-white px-12 py-3 rounded-md shadow-md font-bold hover:bg-blue-800 transition duration-200">
                     ถัดไป
                 </button>
             </div>
@@ -461,4 +458,4 @@
     });
 </script>
 </body>
-</html>
+</html> 
