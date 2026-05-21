@@ -62,7 +62,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-slate-50 text-gray-800 antialiased py-10 px-4 md:px-8">
+<body class="bg-slate-50 text-gray-800 antialiased py-10 px-4 md:px-8" data-pricing-page="Academic_services_TH">
 
     <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
         
@@ -113,35 +113,35 @@
                                     <div class="grid grid-cols-2 h-full min-h-[4rem]">
                                         <div class="border-r border-gray-300 p-2 flex flex-col justify-center">
                                             <span>ค่าเช่าพาหนะ (ต่อคันต่อวัน)</span>
-                                            <span class="font-bold text-sm text-gray-900 mt-1">2,500 บาท</span>
+                                            <span class="font-bold text-sm text-gray-900 mt-1" data-price-key="vehicle_rental">2,500 บาท</span>
                                         </div>
                                         <div class="p-2 flex flex-col justify-center">
                                             <span>ค่าน้ำมันต่อกิโลเมตร</span>
-                                            <span class="font-bold text-sm text-gray-900 mt-1">6 บาท</span>
+                                            <span class="font-bold text-sm text-gray-900 mt-1" data-price-key="fuel_per_km">6 บาท</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="border-b border-gray-300 p-3 align-middle">ค่าตั๋วเครื่องบิน (ไป-กลับ)<br><span class="font-bold text-sm text-gray-900 mt-1 inline-block">15,000 บาท</span></td>
+                                <td class="border-b border-gray-300 p-3 align-middle">ค่าตั๋วเครื่องบิน (ไป-กลับ)<br><span class="font-bold text-sm text-gray-900 mt-1 inline-block" data-price-key="air_travel">15,000 บาท</span></td>
                             </tr>
                             <tr>
                                 <td class="border-b border-r border-gray-300 p-3 text-left font-medium">ค่าที่พัก (ต่อคนต่อคืน)</td>
-                                <td colspan="2" class="border-b border-gray-300 p-3 font-bold text-sm text-gray-900">1,600 บาท</td>
+                                <td colspan="2" class="border-b border-gray-300 p-3 font-bold text-sm text-gray-900" data-price-key="accommodation">1,600 บาท</td>
                             </tr>
                             <tr>
                                 <td colspan="3" class="border-b border-gray-300 p-3 text-left font-bold text-gray-900 bg-gray-50">จัดฝึกอบรม ณ สถาบันมาตรวิทยาแห่งชาติ</td>
                             </tr>
                             <tr>
                                 <td class="border-b border-r border-gray-300 p-3 text-left font-medium">ค่าอาหารและเครื่องดื่ม (ต่อคนต่อวัน)</td>
-                                <td colspan="2" class="border-b border-gray-300 p-3 font-bold text-sm text-gray-900">900 บาท</td>
+                                <td colspan="2" class="border-b border-gray-300 p-3 font-bold text-sm text-gray-900" data-price-key="food_per_person">900 บาท</td>
                             </tr>
                             <tr>
                                 <td class="border-r border-gray-300 p-3 text-left font-medium">ค่าบริการใช้ห้องอบรม และอุปกรณ์ต่างๆ (ต่อวัน)</td>
                                 <td colspan="2" class="p-0">
                                     <div class="grid grid-cols-4 h-full text-xs min-h-[4rem]">
-                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">ไม่เกิน 20 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1">3,210 บาท</span></div>
-                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">ไม่เกิน 30 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1">4,815 บาท</span></div>
-                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">ไม่เกิน 40 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1">5,350 บาท</span></div>
-                                        <div class="p-2 flex flex-col justify-center">ไม่เกิน 60 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1">6,420 บาท</span></div>
+                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">ไม่เกิน 20 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1" data-price-key="room_20">3,210 บาท</span></div>
+                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">ไม่เกิน 30 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1" data-price-key="room_30">4,815 บาท</span></div>
+                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">ไม่เกิน 40 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1" data-price-key="room_40">5,350 บาท</span></div>
+                                        <div class="p-2 flex flex-col justify-center">ไม่เกิน 60 คน<br><span class="font-bold text-[13px] text-gray-900 mt-1" data-price-key="room_60">6,420 บาท</span></div>
                                     </div>
                                 </td>
                             </tr>
@@ -251,5 +251,6 @@
         </footer>
     </div>
 
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

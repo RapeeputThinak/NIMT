@@ -63,7 +63,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-slate-50 text-gray-800 antialiased py-10 px-4 md:px-8">
+<body class="bg-slate-50 text-gray-800 antialiased py-10 px-4 md:px-8" data-pricing-page="Academic_services_EN">
 
     <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
         
@@ -111,35 +111,35 @@
                                     <div class="grid grid-cols-2 h-full min-h-[4rem]">
                                         <div class="border-r border-gray-300 p-2 flex flex-col justify-center">
                                             <span>Vehicle rental fee (per vehicle)</span>
-                                            <span class="text-sm mt-1 text-gray-900">2,336.45 THB</span>
+                                            <span class="text-sm mt-1 text-gray-900" data-price-key="vehicle_rental">2,336.45 THB</span>
                                         </div>
                                         <div class="p-2 flex flex-col justify-center">
                                             <span>Fuel charge per km</span>
-                                            <span class="text-sm mt-1 text-gray-900">5.61 THB</span>
+                                            <span class="text-sm mt-1 text-gray-900" data-price-key="fuel_per_km">5.61 THB</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="border-b border-gray-300 p-3 align-middle">Air Travel Expenses (Round-trip)<br><span class="text-sm text-gray-900 mt-1 inline-block">14,018.69 THB</span></td>
+                                <td class="border-b border-gray-300 p-3 align-middle">Air Travel Expenses (Round-trip)<br><span class="text-sm text-gray-900 mt-1 inline-block" data-price-key="air_travel">14,018.69 THB</span></td>
                             </tr>
                             <tr>
                                 <td class="border-b border-r border-gray-300 p-3 text-left font-medium">Accommodation fee (per person per night)</td>
-                                <td colspan="2" class="border-b border-gray-300 p-3 text-sm text-gray-900">1,495.33 THB</td>
+                                <td colspan="2" class="border-b border-gray-300 p-3 text-sm text-gray-900" data-price-key="accommodation">1,495.33 THB</td>
                             </tr>
                             <tr>
                                 <td colspan="3" class="border-b border-gray-300 p-3 text-left font-bold text-gray-900 bg-gray-50">** In case of using the services of the National Institute of Metrology (Thailand) facilities</td>
                             </tr>
                             <tr>
                                 <td class="border-b border-r border-gray-300 p-3 text-left font-medium">Food and beverage cost (per person per day)</td>
-                                <td colspan="2" class="border-b border-gray-300 p-3 text-sm text-gray-900">841.12 THB</td>
+                                <td colspan="2" class="border-b border-gray-300 p-3 text-sm text-gray-900" data-price-key="food_per_person">841.12 THB</td>
                             </tr>
                             <tr>
                                 <td class="border-r border-gray-300 p-3 text-left font-medium">Training room, and equipment rental fee per day</td>
                                 <td colspan="2" class="p-0">
                                     <div class="grid grid-cols-4 h-full text-xs min-h-[4rem]">
-                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">Up to 20 people<br><span class="text-[13px] text-gray-900 mt-1">3,000 THB</span></div>
-                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">Up to 30 people<br><span class="text-[13px] text-gray-900 mt-1">4,500 THB</span></div>
-                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">Up to 40 people<br><span class="text-[13px] text-gray-900 mt-1">5,000 THB</span></div>
-                                        <div class="p-2 flex flex-col justify-center">Up to 60 people<br><span class="text-[13px] text-gray-900 mt-1">6,000 THB</span></div>
+                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">Up to 20 people<br><span class="text-[13px] text-gray-900 mt-1" data-price-key="room_20">3,000 THB</span></div>
+                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">Up to 30 people<br><span class="text-[13px] text-gray-900 mt-1" data-price-key="room_30">4,500 THB</span></div>
+                                        <div class="border-r border-gray-300 p-2 flex flex-col justify-center">Up to 40 people<br><span class="text-[13px] text-gray-900 mt-1" data-price-key="room_40">5,000 THB</span></div>
+                                        <div class="p-2 flex flex-col justify-center">Up to 60 people<br><span class="text-[13px] text-gray-900 mt-1" data-price-key="room_60">6,000 THB</span></div>
                                     </div>
                                 </td>
                             </tr>
@@ -158,12 +158,13 @@
                 <!-- Arrange Services Section -->
                 <div>
                     <p class="font-bold text-gray-800 mb-3">In case of requiring National Institute of Metrology (Thailand) to arrange transportation, accommodation, food, and beverages services</p>
-                    <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 ml-2 sm:ml-6">
-                        <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+                    <!-- แก้ไขให้แสดงผลเป็นแนวตั้ง (flex-col) โดยนำ sm:flex-row ออก -->
+                    <div class="flex flex-col gap-2 ml-2 sm:ml-6">
+                        <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition border border-transparent hover:border-gray-200 w-fit">
                             <input type="radio" name="arrange_service" value="Yes" class="form-radio" required>
                             <span class="font-medium text-gray-800">Yes, I request the arrangement of services.</span>
                         </label>
-                        <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+                        <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition border border-transparent hover:border-gray-200 w-fit">
                             <input type="radio" name="arrange_service" value="No" class="form-radio">
                             <span class="font-medium text-gray-600">No, I do not request the arrangement of services.</span>
                         </label>
@@ -253,5 +254,6 @@
         </footer>
     </div>
 
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

@@ -9,6 +9,8 @@ require 'PHPMailer/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+require_once __DIR__ . '/email_config.php';
+
 // เชื่อมต่อฐานข้อมูล
 $conn = new mysqli("localhost", "root", "", "nimt_training");
 
@@ -96,15 +98,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
+            $mail->Host       = $email_config['smtp']['host'];
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'ponrapeeput@gmail.com';
-            $mail->Password   = 'dbiu lkpt syli nxxs'; // App Password ของ Gmail
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
+            $mail->Username   = $email_config['smtp']['username'];
+            $mail->Password   = $email_config['smtp']['password'];
+            $mail->SMTPSecure = $email_config['smtp']['encryption'] === 'ssl' ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = intval($email_config['smtp']['port']);
             $mail->CharSet    = 'UTF-8';
 
-            $mail->setFrom('ponrapeeput@gmail.com', 'NIMT Training Service');
+            $mail->setFrom($email_config['from']['address'] ?? $email_config['smtp']['username'], $email_config['from']['name'] ?? 'NIMT Training Service');
             $mail->addAddress($contact_email, $contact_name);
 
             $mail->isHTML(true);

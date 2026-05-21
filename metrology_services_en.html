@@ -9,6 +9,15 @@
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         .table-custom th, .table-custom td { border: 1px solid #94a3b8; padding: 6px; text-align: center; }
+        
+        /* ปรับขนาด Checkbox และ Radio ให้ใหญ่ขึ้นและสวยงาม */
+        .form-checkbox, .form-radio {
+            width: 1.25rem; /* ขนาด 20px */
+            height: 1.25rem; /* ขนาด 20px */
+            cursor: pointer;
+            flex-shrink: 0; /* ป้องกันกล่องหดตัวเมื่อข้อความยาว */
+            accent-color: #1e3a8a; /* เปลี่ยนสีตอนติ๊กเป็นสีน้ำเงินเข้ม */
+        }
     </style>
     <script>
         const storageKey = 'form_data_' + window.location.pathname.split('/').pop();
@@ -43,12 +52,12 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-slate-50 p-4 md:p-10" onchange="saveFormData()" oninput="saveFormData()">
+<body class="bg-slate-50 p-4 md:p-10" onchange="saveFormData()" oninput="saveFormData()" data-pricing-page="Metrology_services_EN">
     <form action="save_all_data.php" method="POST">
         <input type="hidden" name="category" value="Metrology-EN">
         <div class="max-w-4xl mx-auto bg-white p-12 shadow-lg border border-gray-200">
             
-            <!-- ส่วน Header ข้อมูลสองภาษา (ใส่แทนที่ตรงนี้ครับ) -->
+            <!-- ส่วน Header ข้อมูลสองภาษา -->
             <div class="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-6 text-[10px]">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 bg-blue-900 flex items-center justify-center text-white font-bold rounded">LOGO</div>
@@ -83,29 +92,29 @@
                             <td class="text-left font-semibold">Local Transportation fee</td>
                             <td class="p-0">
                                 <div class="grid grid-cols-2 h-full">
-                                    <div class="border-r border-gray-400 p-2">Vehicle rental fee<br>(per vehicle)<br>2,336.45 THB</div>
-                                    <div class="p-2">Fuel charge per km<br><br>5.61 THB</div>
+                                    <div class="border-r border-gray-400 p-2">Vehicle rental fee<br>(per vehicle)<br><span data-price-key="vehicle_rental">2,336.45 THB</span></div>
+                                    <div class="p-2">Fuel charge per km<br><br><span data-price-key="fuel_per_km">5.61 THB</span></div>
                                 </div>
                             </td>
-                            <td>Air Travel Expenses (Round-trip)<br><br>14,018.69 THB</td>
+                            <td>Air Travel Expenses (Round-trip)<br><br><span data-price-key="air_travel">14,018.69 THB</span></td>
                         </tr>
                         <tr>
                             <td class="text-left font-semibold">Accommodation fee (per person per night)</td>
-                            <td colspan="2">1,495.33 THB</td>
+                            <td colspan="2" data-price-key="accommodation">1,495.33 THB</td>
                         </tr>
                         <tr class="font-bold bg-gray-50"><td colspan="3" class="text-left">** In case of using the services of the National Institute of Metrology (Thailand) facilities</td></tr>
                         <tr>
                             <td class="text-left font-semibold">Food and beverage cost<br>(per person per day)</td>
-                            <td colspan="2">841.12 THB</td>
+                            <td colspan="2" data-price-key="food_per_person">841.12 THB</td>
                         </tr>
                         <tr>
                             <td class="text-left font-semibold">Training room, and equipment rental fee per day</td>
                             <td colspan="2" class="p-0 text-[10px]">
                                 <div class="grid grid-cols-4 h-full">
-                                    <div class="border-r border-gray-400 p-1">Up to 20 people<br>3,000 THB</div>
-                                    <div class="border-r border-gray-400 p-1">Up to 30 people<br>4,500 THB</div>
-                                    <div class="border-r border-gray-400 p-1">Up to 40 people<br>5,000 THB</div>
-                                    <div class="p-1">Up to 60 people<br>6,000 THB</div>
+                                    <div class="border-r border-gray-400 p-1">Up to 20 people<br><span data-price-key="room_20">3,000 THB</span></div>
+                                    <div class="border-r border-gray-400 p-1">Up to 30 people<br><span data-price-key="room_30">4,500 THB</span></div>
+                                    <div class="border-r border-gray-400 p-1">Up to 40 people<br><span data-price-key="room_40">5,000 THB</span></div>
+                                    <div class="p-1">Up to 60 people<br><span data-price-key="room_60">6,000 THB</span></div>
                                 </div>
                             </td>
                         </tr>
@@ -121,8 +130,8 @@
                 <div>
                     <p class="font-bold mb-3">In case of requiring National Institute of Metrology (Thailand) to arrange transportation, accommodation, food, and beverages services</p>
                     <div class="flex flex-col gap-2 ml-4">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="arrange_service" value="Yes" required> Yes, I request the arrangement of services.</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="arrange_service" value="No"> No, I do not request the arrangement of services.</label>
+                        <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="arrange_service" value="Yes" class="form-radio" required> Yes, I request the arrangement of services.</label>
+                        <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="arrange_service" value="No" class="form-radio"> No, I do not request the arrangement of services.</label>
                     </div>
                 </div>
 
@@ -130,14 +139,14 @@
                     <p class="font-bold underline italic">If yes, please select the desired services:</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-slate-50 p-4 border border-slate-200 rounded">
-                            <p class="font-bold border-b mb-2 pb-1 text-xs">At the service user's premises</p>
-                            <label class="flex items-center gap-2 mb-2"><input type="checkbox" name="site_vehicle" value="Yes"> Vehicle</label>
-                            <label class="flex items-start gap-2"><input type="checkbox" name="site_hotel" value="Yes" class="mt-1"> <span>Accommodation (Lunch for the speaker requesting the service is to be provided by the speaker)</span></label>
+                            <p class="font-bold border-b mb-3 pb-1 text-xs">At the service user's premises</p>
+                            <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" name="site_vehicle" value="Yes" class="form-checkbox"> Vehicle</label>
+                            <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" name="site_hotel" value="Yes" class="form-checkbox mt-0.5"> <span class="leading-snug">Accommodation <br><span class="text-xs text-gray-500 font-normal">(Lunch for the speaker requesting the service is to be provided by the speaker)</span></span></label>
                         </div>
                         <div class="bg-slate-50 p-4 border border-slate-200 rounded">
-                            <p class="font-bold border-b mb-2 pb-1 text-xs">At the National Institute of Metrology (Thailand)</p>
-                            <label class="flex items-center gap-2 mb-2"><input type="checkbox" name="nimt_room" value="Yes"> Training Room and Equipment</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="nimt_food" value="Yes"> Food and Beverage</label>
+                            <p class="font-bold border-b mb-3 pb-1 text-xs">At the National Institute of Metrology (Thailand)</p>
+                            <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" name="nimt_room" value="Yes" class="form-checkbox"> Training Room and Equipment</label>
+                            <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" name="nimt_food" value="Yes" class="form-checkbox"> Food and Beverage</label>
                         </div>
                     </div>
                 </div>
@@ -145,25 +154,35 @@
 
             <div class="border-t-2 border-gray-200 pt-6 space-y-4">
                 <div>
-                    <p class="font-bold text-[11px] mb-2 underline">Remarks:</p>
-                    <div class="text-[11px] space-y-2 font-semibold ml-4">
-                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> The National Institute of Metrology (Thailand) reserves the right to assign a lecturer as deemed appropriate.</label>
-                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> The National Institute of Metrology (Thailand) will send a summary of the in-house training fees to the contact person's e-mail for service confirmation and payment.</label>
-                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> All fee rates are fixed and non-negotiable.</label>
+                    <p class="font-bold text-[12px] mb-3 underline">Remarks:</p>
+                    <div class="text-[12px] space-y-3 font-semibold ml-4">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" class="form-checkbox mt-0.5" required> 
+                            <span>The National Institute of Metrology (Thailand) reserves the right to assign a lecturer as deemed appropriate.</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" class="form-checkbox mt-0.5" required> 
+                            <span>The National Institute of Metrology (Thailand) will send a summary of the in-house training fees to the contact person's e-mail for service confirmation and payment.</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" class="form-checkbox mt-0.5" required> 
+                            <span>All fee rates are fixed and non-negotiable.</span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="bg-blue-50 p-4 border-l-4 border-blue-900 mt-6">
-                    <p class="font-bold text-xs mb-2">Disclosure of information to the National Institute of Metrology (Thailand)</p>
-                    <label class="flex items-start gap-2 text-xs font-bold italic cursor-pointer">
-                        <input type="radio" name="privacy_consent" value="I agree" class="mt-1" required> I agree to disclose my information for use in contacting and coordinating and issuing receipts/tax invoices.
+                <div class="bg-blue-50 p-5 border-l-4 border-blue-900 mt-6 rounded-r-lg shadow-sm">
+                    <p class="font-bold text-[13px] mb-3 text-blue-900">Disclosure of information to the National Institute of Metrology (Thailand)</p>
+                    <label class="flex items-start gap-3 text-[13px] font-bold italic cursor-pointer">
+                        <input type="radio" name="privacy_consent" value="I agree" class="form-radio mt-0.5" required> 
+                        <span class="leading-snug">I agree to disclose my information for use in contacting and coordinating and issuing receipts/tax invoices.</span>
                     </label>
                 </div>
             </div>
 
             <div class="mt-10 flex justify-center gap-4">
                 <a href="metrology_form_en.html" onclick="saveFormData()" class="bg-gray-400 text-white px-8 py-2 rounded shadow hover:bg-gray-500 font-bold transition">Back</a>
-                <button type="submit" class="bg-green-900 text-white px-10 py-2 rounded shadow hover:bg-green-800 font-bold transition">Submit Request</button>
+                <button type="submit" class="bg-blue-900 text-white px-10 py-2 rounded shadow hover:bg-blue-800 font-bold transition">Submit Request</button>
             </div>
             
             <div class="flex justify-between items-end text-[10px] text-gray-500 mt-8 pt-4 border-t border-gray-200">
@@ -172,5 +191,6 @@
             </div>
         </div>
     </form>
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

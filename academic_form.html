@@ -74,7 +74,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-slate-50 text-gray-800 antialiased py-10 px-4 md:px-8">
+<body class="bg-slate-50 text-gray-800 antialiased py-10 px-4 md:px-8" data-pricing-page="Academic_form_TH">
 
     <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
         
@@ -120,12 +120,12 @@
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="border-b border-r border-gray-300 p-4 font-medium">ก</td>
                                 <td class="border-b border-r border-gray-300 p-4 text-left">จำนวนผู้เข้าฟัง : ไม่เกิน 60 คน</td>
-                                <td class="border-b border-gray-300 p-4  text-black-700">25,680 บาท</td>
+                                <td class="border-b border-gray-300 p-4  text-black-700" data-price-key="up_to_60_people">25,680 บาท</td>
                             </tr>
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="border-r border-gray-300 p-4 font-medium">ข</td>
                                 <td class="border-r border-gray-300 p-4 text-left">จำนวนผู้เข้าฟัง : มากกว่า 60 คน แต่ไม่เกิน 120 คน</td>
-                                <td class="border-gray-300 p-4  text-black-700">29,960 บาท</td>
+                                <td class="border-gray-300 p-4  text-black-700" data-price-key="more_than_60_up_to_120">29,960 บาท</td>
                             </tr>
                         </tbody>
                     </table>
@@ -248,5 +248,6 @@
         </footer>
     </div>
 
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

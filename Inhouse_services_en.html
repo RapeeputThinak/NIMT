@@ -40,7 +40,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-slate-50 text-gray-800 antialiased" onchange="saveFormData()" oninput="saveFormData()">
+<body class="bg-slate-50 text-gray-800 antialiased" onchange="saveFormData()" oninput="saveFormData()" data-pricing-page="Inhouse_services_EN">
 
     <div class="max-w-4xl mx-auto my-10 bg-white shadow-xl rounded-lg overflow-hidden border border-gray-200">
         
@@ -84,31 +84,31 @@
                             <td class="border border-gray-200 p-2 text-left">Local Transportation fee</td>
                             <td class="border border-gray-200 p-0">
                                 <div class="grid grid-cols-2 h-full">
-                                    <div class="border-r border-gray-200 p-2">Vehicle rental fee (per vehicle): <br><span>2,336.45</span></div>
-                                    <div class="p-2">Fuel charge per km: <br><span>5.61</span></div>
+                                    <div class="border-r border-gray-200 p-2">Vehicle rental fee (per vehicle): <br><span data-price-key="vehicle_rental">2,336.45</span></div>
+                                    <div class="p-2">Fuel charge per km: <br><span data-price-key="fuel_per_km">5.61</span></div>
                                 </div>
                             </td>
-                            <td class="border border-gray-200 p-2">Air Travel Expenses (Round-trip): <br><span>14,018.69</span></td>
+                            <td class="border border-gray-200 p-2">Air Travel Expenses (Round-trip): <br><span data-price-key="air_travel">14,018.69</span></td>
                         </tr>
                         <tr>
                             <td class="border border-gray-200 p-2 text-left italic">Accommodation fee (per person per night)</td>
-                            <td colspan="2" class="border border-gray-200 p-2">1,495.33</td>
+                            <td colspan="2" class="border border-gray-200 p-2" data-price-key="accommodation">1,495.33</td>
                         </tr>
                         <tr class="bg-blue-50">
                             <td colspan="3" class="border border-gray-200 p-2 text-left font-bold italic">** In case of using the services of the National Institute of Metrology (Thailand) facilities</td>
                         </tr>
                         <tr>
                             <td class="border border-gray-200 p-2 text-left italic">Food and beverage cost (per person per day)</td>
-                            <td colspan="2" class="border border-gray-200 p-2">841.12</td>
+                            <td colspan="2" class="border border-gray-200 p-2" data-price-key="food_per_person">841.12</td>
                         </tr>
                         <tr>
                             <td class="border border-gray-200 p-2 text-left italic">Training room, and equipment rental fee per day</td>
                             <td colspan="2" class="border border-gray-200 p-0">
                                 <div class="grid grid-cols-4 text-[10px]">
-                                    <div class="border-r border-gray-200 p-2">Up to 20 people: <br><span>3,000</span></div>
-                                    <div class="border-r border-gray-200 p-2">Up to 30 people: <br><span>4,500</span></div>
-                                    <div class="border-r border-gray-200 p-2">Up to 40 people: <br><span>5,000</span></div>
-                                    <div class="p-2">Up to 60 people: <br><span>6,000</span></div>
+                                    <div class="border-r border-gray-200 p-2">Up to 20 people: <br><span data-price-key="room_20">3,000</span></div>
+                                    <div class="border-r border-gray-200 p-2">Up to 30 people: <br><span data-price-key="room_30">4,500</span></div>
+                                    <div class="border-r border-gray-200 p-2">Up to 40 people: <br><span data-price-key="room_40">5,000</span></div>
+                                    <div class="p-2">Up to 60 people: <br><span data-price-key="room_60">6,000</span></div>
                                 </div>
                             </td>
                         </tr>
@@ -207,5 +207,6 @@
         </footer>
     </div>
 
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

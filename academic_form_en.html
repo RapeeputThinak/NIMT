@@ -102,7 +102,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-gray-100 p-4 md:p-10">
+<body class="bg-gray-100 p-4 md:p-10" data-pricing-page="Academic_form_EN">
     <div class="max-w-4xl mx-auto my-10 bg-white shadow-xl rounded-lg border border-gray-200">
         
         <!-- ส่วน Header ข้อมูลสองภาษา (ชิดขวาแบบฟอร์มอื่นๆ) -->
@@ -146,12 +146,12 @@
                         <tr>
                             <td class="border border-gray-300 p-3">A</td>
                             <td class="border border-gray-300 p-3 text-left">Up to 60 participants</td>
-                            <td class="border border-gray-300 p-3 font-bold">25,680 THB</td>
+                            <td class="border border-gray-300 p-3 font-bold" data-price-key="up_to_60_people">25,680 THB</td>
                         </tr>
                         <tr>
                             <td class="border border-gray-300 p-3">B</td>
                             <td class="border border-gray-300 p-3 text-left">More than 60 but not exceeding 120 participants</td>
-                            <td class="border border-gray-300 p-3 font-bold">29,960 THB</td>
+                            <td class="border border-gray-300 p-3 font-bold" data-price-key="more_than_60_up_to_120">29,960 THB</td>
                         </tr>
                     </tbody>
                 </table>
@@ -444,5 +444,6 @@
             });
         });
     </script>
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

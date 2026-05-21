@@ -100,7 +100,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-gray-100 p-4 md:p-10">
+<body class="bg-gray-100 p-4 md:p-10" data-pricing-page="Inhouse_form_EN">
 
 <div class="max-w-4xl mx-auto my-10 bg-white shadow-xl rounded-lg border border-gray-200">
 
@@ -146,24 +146,21 @@
                     <tr>
                         <td class="border border-gray-200 p-3 text-center font-bold">A</td>
                         <td class="border border-gray-200 p-3">Theoretical curriculum (up to 20 people)</td>
-                        <td class="border border-gray-200 p-3 text-right font-semibold">60,000 Baht</td>
-                        <td class="border border-gray-200 p-3 text-right font-semibold">3,000 Baht</td>
+                        <td class="border border-gray-200 p-3 text-right font-semibold" data-price-key="theoretical_up_to_20">60,000 Baht</td>
+                        <td class="border border-gray-200 p-3 text-right font-semibold" data-price-key="additional_per_person">3,000 Baht</td>
                     </tr>
                     <tr>
                         <td rowspan="2" class="border border-gray-200 p-3 text-center font-bold">B</td>
                         <td class="border border-gray-200 p-3 italic">Theoretical and practical curriculum</td>
                         <td class="border border-gray-200 p-3 text-right"></td>
-                        <td rowspan="2" class="border border-gray-200 p-3 text-right font-semibold">4,000 Baht</td>
+                        <td rowspan="2" class="border border-gray-200 p-3 text-right font-semibold" data-price-key="practical_bundle_price">4,000 Baht</td>
                     </tr>
                     <tr>
                         <td class="border border-gray-200 p-3 pl-6">
                             I: 1 - 7 people<br>
                             II: 8 - 15 people
                         </td>
-                        <td class="border border-gray-200 p-3 text-right font-semibold">
-                            50,000 Baht<br>
-                            60,000 Baht
-                        </td>
+                        <td class="border border-gray-200 p-3 text-right font-semibold"><span data-price-key="practical_1_to_7">50,000 Baht</span><br><span data-price-key="practical_8_to_15">60,000 Baht</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -441,5 +438,6 @@
     });
     
 </script>
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

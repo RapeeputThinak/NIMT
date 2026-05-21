@@ -155,7 +155,7 @@
         }
     </script>
 </head>
-<body class="bg-slate-50 p-4 md:p-10">
+<body class="bg-slate-50 p-4 md:p-10" data-pricing-page="Metrology_form_EN">
     <form action="step1_session.php" method="POST" onsubmit="return handleSubmit(event)">
         <input type="hidden" name="category" value="Metrology-EN">
         <input type="hidden" name="next_page" value="metrology_services_en.html">
@@ -196,8 +196,8 @@
                     <tbody>
                         <tr>
                             <td class="border border-gray-300 p-3 text-left">The consulting service is available for up to 5 participants</td>
-                            <td class="border border-gray-300 p-3 font-bold">7,704 THB</td>
-                            <td class="border border-gray-300 p-3 font-bold">1,070 THB</td>
+                            <td class="border border-gray-300 p-3 font-bold" data-price-key="consulting_fee">7,704 THB</td>
+                            <td class="border border-gray-300 p-3 font-bold" data-price-key="additional_person_fee">1,070 THB</td>
                         </tr>
                     </tbody>
                 </table>
@@ -484,5 +484,6 @@
             });
         });
     </script>
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

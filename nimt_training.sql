@@ -25,5 +25,6 @@ CREATE TABLE bookings (
     category VARCHAR(50),
     fiscal_year VARCHAR(20), /* เพิ่มฟิลด์นี้ */
     payment_status ENUM('pending', 'paid') DEFAULT 'pending',
+    email_sent TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

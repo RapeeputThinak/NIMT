@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสร้างอีเมลยืนยันการจัดอบรม (NIMT)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
+        /* แต่ง Scrollbar ฝั่งซ้ายให้ดูซอฟต์ลง */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Animation ตอนแก้ไขพรีวิว */
+        .editing-mode {
+            animation: pulse-border 2s infinite;
+            background-color: #fefce8;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(234, 179, 8, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-12">
+    
+    <!-- Top Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg shadow-sm">
+                    <i data-lucide="mail" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 leading-none">ระบบสร้างอีเมลยืนยันการจัดอบรม</h1>
+                    <p class="text-xs text-slate-500 mt-1">สถาบันมาตรวิทยาแห่งชาติ (NIMT)</p>
+                </div>
+            </div>
+            <!-- แจ้งเตือนสถานะมุมขวาบน -->
+            <span id="save-status" class="text-sm font-medium text-emerald-600 transition-opacity opacity-0"></span>
+        </div>
+    </header>
+
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 mt-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- ============================================== -->
+            <!-- ฝั่งซ้าย: ฟอร์มแก้ไขข้อมูล (Scrollable) -->
+            <!-- ============================================== -->
+            <div class="lg:col-span-5 flex flex-col h-full relative">
+                
+                <form id="emailSendForm" method="post" action="send_email.php" enctype="multipart/form-data" class="space-y-6 pb-24">
+                    
+                    <!-- ส่วนที่ 1: ข้อมูลหลักอีเมล -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                        <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2 mb-4">
+                            <i data-lucide="mail-plus" class="w-5 h-5 text-blue-500"></i> <span>ข้อมูลหลักอีเมล</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">หัวข้ออีเมล (Subject)</label>
+                                <textarea id="input-subject" name="subject" rows="2" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none text-sm" oninput="updatePreview()">[NIMT In-house Training] ยืนยันรายละเอียดและค่าธรรมเนียม หัวข้อ การสอบเทียบแหล่งกำเนิดอุณหภูมิเชิงแผ่รังสีโดยใช้ Infrared thermometer</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">ส่งไปที่อีเมล <span class="text-slate-400 font-normal">(คั่นด้วยลูกน้ำ ,)</span></label>
+                                <input type="text" id="input-recipientEmails" name="recipient_emails" placeholder="user1@example.com, user2@example.com" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">ชื่อผู้รับอีเมล <span class="text-slate-400 font-normal">(คำขึ้นต้น เรียน...)</span></label>
+                                <input type="text" id="input-recipientName" name="recipientName" value="คุณพนิดา ครัวเชื้อ" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-medium" oninput="updatePreview()" />
+                            </div>
+                            <input type="hidden" name="send_action" value="manual" />
+                        </div>
+                    </div>
+
+                    <!-- ส่วนที่ 2: ข้อมูลการอบรม -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                        <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2 mb-4">
+                            <i data-lucide="calendar-days" class="w-5 h-5 text-emerald-500"></i> <span>รายละเอียดการจัดอบรม</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">หัวข้ออบรม</label>
+                                <textarea id="input-courseName" name="courseName" rows="2" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all resize-none text-sm" oninput="updatePreview()">การสอบเทียบแหล่งกำเนิดอุณหภูมิเชิงแผ่รังสีโดยใช้ Infrared thermometer</textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">วันที่จัดอบรม</label>
+                                    <input type="text" id="input-trainingDate" name="trainingDate" value="20 มีนาคม 2569" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1 flex items-center space-x-1">
+                                        <i data-lucide="users" class="w-3 h-3 text-slate-400"></i> <span>จำนวนผู้เข้าอบรม</span>
+                                    </label>
+                                    <input type="number" id="input-attendeeCount" name="attendeeCount" value="7" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm text-center font-medium" oninput="updatePreview()" />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">ชื่อวิทยากร</label>
+                                    <input type="text" id="input-speakerName" name="speakerName" value="คุณพิเชษฐ วงษ์นุช" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">เบอร์ติดต่อวิทยากร</label>
+                                    <input type="text" id="input-speakerPhone" name="speakerPhone" value="02 557 5100 / 081 383 9433" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ส่วนที่ 3: ค่าธรรมเนียมและกำหนดการ -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                        <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2 mb-4">
+                            <i data-lucide="wallet" class="w-5 h-5 text-amber-500"></i> <span>ค่าธรรมเนียมและกำหนดการ</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">ค่าธรรมเนียม (บาท)</label>
+                                <input type="text" id="input-feeAmount" name="feeAmount" value="26,750" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500 outline-none text-sm font-semibold text-amber-700" oninput="updatePreview()" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">กำหนดชำระเงิน</label>
+                                    <input type="text" id="input-paymentDueDate" name="paymentDueDate" value="6 มีนาคม 2569" class="w-full px-4 py-2.5 bg-red-50/50 border border-red-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500 outline-none text-sm text-red-600 font-medium" oninput="updatePreview()" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">กำหนดยืนยันจัดอบรม</label>
+                                    <input type="text" id="input-confirmDueDate" name="confirmDueDate" value="16 กุมภาพันธ์ 2569" class="w-full px-4 py-2.5 bg-red-50/50 border border-red-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500 outline-none text-sm text-red-600 font-medium" oninput="updatePreview()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ส่วนที่ 4: ข้อมูลธนาคาร -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                        <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2 mb-4">
+                            <i data-lucide="landmark" class="w-5 h-5 text-indigo-500"></i> <span>ข้อมูลบัญชีธนาคาร</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">ชื่อบัญชี (ภาษาไทย)</label>
+                                    <input type="text" id="input-bankAccountNameTH" name="bankAccountNameTH" value="กองทุนเพื่อการพัฒนาระบบมาตรวิทยา" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">ชื่อบัญชี (ภาษาอังกฤษ)</label>
+                                    <input type="text" id="input-bankAccountNameEN" name="bankAccountNameEN" value="The Fund for National Metrology System Development" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">ธนาคารและสาขา</label>
+                                    <input type="text" id="input-bankBankName" name="bankBankName" value="บมจ. ธนาคารกรุงไทย สาขารังสิต-นครนายก คลอง 4" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">เลขที่บัญชี</label>
+                                    <input type="text" id="input-bankAccountNo" name="bankAccountNo" value="148-0-11593-2" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-semibold tracking-wide" oninput="updatePreview()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ส่วนที่ 5: ผู้ลงนามส่งอีเมล -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                        <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2 mb-4">
+                            <i data-lucide="pen-line" class="w-5 h-5 text-purple-500"></i> <span>ข้อมูลผู้ส่ง (ลงนามท้ายอีเมล)</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">ชื่อ-นามสกุล ผู้ส่ง</label>
+                                    <input type="text" id="input-senderName" name="senderName" value="กิจติยา แก้วมูล" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none text-sm font-medium" oninput="updatePreview()" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">เบอร์โทรศัพท์</label>
+                                    <input type="text" id="input-senderPhone" name="senderPhone" value="02 026 5400 ต่อ 8301-3" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none text-sm" oninput="updatePreview()" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">ตำแหน่ง / หน่วยงาน</label>
+                                <input type="text" id="input-senderTitle" name="senderTitle" value="กลุ่มงานพัฒนาธุรกิจ (อบรม) ฝ่ายนโยบายและยุทธศาสตร์" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none text-sm" oninput="updatePreview()" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">อีเมลผู้ส่ง (Reply-to)</label>
+                                <input type="text" id="input-senderEmail" name="senderEmail" value="training@nimt.or.th" class="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none text-sm text-slate-500" oninput="updatePreview()" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ส่วนที่ 6: เอกสารแนบ -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-slate-700"></div>
+                        <div class="flex justify-between items-end mb-4">
+                            <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2">
+                                <i data-lucide="paperclip" class="w-5 h-5 text-slate-600"></i> <span>เอกสารแนบ / ลิงก์ดาวน์โหลด</span>
+                            </h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- ไฟล์ 1: Bill -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="block text-sm font-bold text-slate-700">1. ใบแจ้งค่าธรรมเนียม (Bill)</label>
+                                    <span id="status-linkBill" class="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 font-medium">ยังไม่ได้แนบ</span>
+                                </div>
+                                <input type="text" id="input-linkBill" name="linkBill" placeholder="วางลิงก์ (URL) Google Drive ที่นี่" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 outline-none text-sm mb-2" oninput="updatePreview()" />
+                                <div class="flex items-center gap-3">
+                                    <label class="inline-flex items-center px-4 py-1.5 bg-white border shadow-sm border-slate-300 rounded-lg cursor-pointer text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                                        <i data-lucide="upload" class="w-4 h-4 mr-2 text-slate-400"></i> เลือกไฟล์อัปโหลด
+                                        <input type="file" id="input-attachBill" name="attachBill" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="sr-only" onchange="updatePreview()" />
+                                    </label>
+                                    <span id="preview-attachBillName" class="text-xs text-slate-500 truncate max-w-[150px]">ไม่มีไฟล์</span>
+                                </div>
+                            </div>
+
+                            <!-- ไฟล์ 2: Excel -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="block text-sm font-bold text-slate-700">2. แบบฟอร์มรายชื่อ (Excel)</label>
+                                    <span id="status-linkExcel" class="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 font-medium">ยังไม่ได้แนบ</span>
+                                </div>
+                                <input type="text" id="input-linkExcel" name="linkExcel" placeholder="วางลิงก์ (URL) Google Drive ที่นี่" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 outline-none text-sm mb-2" oninput="updatePreview()" />
+                                <div class="flex items-center gap-3">
+                                    <label class="inline-flex items-center px-4 py-1.5 bg-white border shadow-sm border-slate-300 rounded-lg cursor-pointer text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                                        <i data-lucide="upload" class="w-4 h-4 mr-2 text-slate-400"></i> เลือกไฟล์อัปโหลด
+                                        <input type="file" id="input-attachExcel" name="attachExcel" accept=".xls,.xlsx,.csv" class="sr-only" onchange="updatePreview()" />
+                                    </label>
+                                    <span id="preview-attachExcelName" class="text-xs text-slate-500 truncate max-w-[150px]">ไม่มีไฟล์</span>
+                                </div>
+                            </div>
+
+                            <!-- ไฟล์ 3: Outline -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="block text-sm font-bold text-slate-700">3. รายละเอียดหลักสูตร (Outline)</label>
+                                    <span id="status-linkOutline" class="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 font-medium">ยังไม่ได้แนบ</span>
+                                </div>
+                                <input type="text" id="input-linkOutline" name="linkOutline" placeholder="วางลิงก์ (URL) Google Drive ที่นี่" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 outline-none text-sm mb-2" oninput="updatePreview()" />
+                                <div class="flex items-center gap-3">
+                                    <label class="inline-flex items-center px-4 py-1.5 bg-white border shadow-sm border-slate-300 rounded-lg cursor-pointer text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                                        <i data-lucide="upload" class="w-4 h-4 mr-2 text-slate-400"></i> เลือกไฟล์อัปโหลด
+                                        <input type="file" id="input-attachOutline" name="attachOutline" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png" class="sr-only" onchange="updatePreview()" />
+                                    </label>
+                                    <span id="preview-attachOutlineName" class="text-xs text-slate-500 truncate max-w-[150px]">ไม่มีไฟล์</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="use_custom_body" id="input-useCustomBody" value="0" />
+                        <input type="hidden" name="booking_id" id="input-bookingId" value="" />
+                        <textarea name="custom_body" id="input-customBody" style="display:none;"></textarea>
+                    
+                </form>
+
+                <!-- แถบเครื่องมือจัดการฟอร์ม (Fixed Bottom Left) -->
+                <div class="fixed bottom-0 left-0 w-full lg:w-[calc(100vw*5/12)] lg:static bg-white/90 backdrop-blur-md border-t lg:border border-slate-200 p-4 lg:rounded-2xl lg:shadow-sm flex justify-between items-center z-20">
+                    <button type="button" onclick="saveDefaults()" id="save-defaults-btn" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">
+                        <i data-lucide="hard-drive-download" class="w-4 h-4"></i>
+                        <span class="hidden sm:inline">จำค่าเริ่มต้นไว้ใช้รอบหน้า</span>
+                        <span class="sm:hidden">จำค่า</span>
+                    </button>
+                    
+                    <button type="submit" form="emailSendForm" class="flex items-center space-x-2 px-8 py-2.5 rounded-xl text-sm font-bold transition-all bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 transform hover:-translate-y-0.5">
+                        <span>ส่งอีเมลระบบนี้</span>
+                        <i data-lucide="send" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- ============================================== -->
+            <!-- ฝั่งขวา: พรีวิวอีเมล (Sticky ตามติดหน้าจอ) -->
+            <!-- ============================================== -->
+            <div class="lg:col-span-7 h-full">
+                <!-- Wrapper ทำให้ Sticky -->
+                <div class="lg:sticky lg:top-24 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col" style="max-height: calc(100vh - 120px);">
+                    
+                    <!-- Header Preview & Actions -->
+                    <div class="bg-slate-800 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">หัวข้ออีเมลที่จะปรากฏ</p>
+                            <p class="text-white font-medium text-sm truncate" id="preview-subject">[NIMT In-house Training] ยืนยันรายละเอียดและค่าธรรมเนียม หัวข้อ การสอบเทียบแหล่งกำเนิดอุณหภูมิเชิงแผ่รังสีโดยใช้ Infrared thermometer</p>
+                        </div>
+                        
+                        <!-- กลุ่มปุ่มจัดการ Preview -->
+                        <div class="flex items-center gap-2 shrink-0 bg-slate-700 p-1 rounded-lg">
+                            <!-- ปุ่มรีเซ็ต (Tooltip) -->
+                            <button type="button" onclick="resetToInitialValues()" class="p-2 rounded-md text-slate-300 hover:text-white hover:bg-slate-600 transition-colors" title="คืนค่าเริ่มต้น">
+                                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            </button>
+                            
+                            <!-- ปุ่มแก้ไข/บันทึก Preview -->
+                            <button type="button" id="edit-preview-btn" onclick="toggleEditPreview()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-slate-600 text-slate-200 hover:bg-slate-500 border border-slate-500">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                <span id="edit-preview-text">แก้ไขโครงสร้าง</span>
+                            </button>
+                            <button type="button" id="save-preview-btn" onclick="savePreviewEdits()" style="display:none;" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                <span>บันทึกโครงสร้าง</span>
+                            </button>
+
+                            <div class="w-px h-4 bg-slate-600 mx-1"></div>
+                            
+                            <!-- ปุ่ม Copy -->
+                            <button type="button" onclick="copyToClipboard()" id="copy-btn" class="flex items-center space-x-1.5 px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-white text-slate-800 hover:bg-blue-50 shadow-sm">
+                                <i data-lucide="copy" class="w-4 h-4" id="copy-icon"></i>
+                                <span id="copy-text">คัดลอก (Copy)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body Preview Area -->
+                    <div class="p-8 overflow-y-auto bg-white text-sm leading-relaxed custom-scrollbar flex-1 relative">
+                        <!-- แจ้งเตือนเวลาเข้าโหมดแก้ไข -->
+                        <div id="edit-alert" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-yellow-100 text-yellow-800 px-4 py-1.5 rounded-full text-xs font-bold shadow-sm border border-yellow-200 z-10 items-center space-x-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                            <span>โหมดแก้ไขโครงสร้างอิสระ (พิมพ์แก้ข้อความได้เลย)</span>
+                        </div>
+
+                        <!-- เนื้อหาอีเมล -->
+                        <div id="email-content" class="whitespace-pre-wrap font-sans text-slate-800 rounded-lg p-2 transition-all outline-none">
+<p><strong>เรียน</strong> <span id="preview-recipientName" class="text-blue-700 font-medium">คุณพนิดา ครัวเชื้อ</span></p>
+<br />
+<p>ตามที่ท่านได้ส่งแบบคำขอใช้บริการฝึกอบรมนอกสถานที่ (In-house Training) มายังสถาบันมาตรวิทยาแห่งชาติ นั้น ทางส่วนฝึกอบรมขอยืนยันการจัดอบรมตามคำขอของท่าน โดยมีรายละเอียดดังต่อไปนี้ครับ</p>
+<br />
+<p><strong>รายละเอียดการฝึกอบรม:</strong></p>
+<ul class="list-disc pl-6 mb-4">
+    <li><strong>หัวข้อ:</strong> <span id="preview-courseName" class="font-medium">การสอบเทียบแหล่งกำเนิดอุณหภูมิเชิงแผ่รังสีโดยใช้ Infrared thermometer</span></li>
+    <li><strong>วันที่จัดอบรม:</strong> <span id="preview-trainingDate">20 มีนาคม 2569</span></li>
+    <li><strong>จำนวนผู้เข้าอบรม:</strong> <span id="preview-attendeeCount">7</span> ท่าน</li>
+    <li><strong>วิทยากร:</strong> <span id="preview-speakerName">คุณพิเชษฐ วงษ์นุช</span> (โทรศัพท์ประสานงานวิทยากร: <span id="preview-speakerPhone">02 557 5100 / 081 383 9433</span>)</li>
+</ul>
+
+<p><strong>รายละเอียดค่าธรรมเนียมและการชำระเงิน:</strong></p>
+<ul class="list-disc pl-6 mb-4">
+    <li><strong>ค่าธรรมเนียมการอบรม:</strong> จำนวน <span id="preview-feeAmount" class="font-bold text-slate-900">26,750</span> บาท (รวมภาษีมูลค่าเพิ่มแล้ว)</li>
+    <li><strong>กำหนดชำระเงิน:</strong> ภายในวันที่ <strong class="text-red-600"><span id="preview-paymentDueDate">6 มีนาคม 2569</span></strong></li>
+    <li><strong>ช่องทางการชำระเงิน:</strong> ท่านสามารถชำระเงินผ่าน Bill Payment (ตามใบแจ้งค่าธรรมเนียมที่แนบมา) หรือโอนเงินเข้าบัญชี:
+        <ul class="list-circle pl-6 mt-1 text-slate-600">
+            <li><strong>ชื่อบัญชี:</strong> <span id="preview-bankAccountNameTH">กองทุนเพื่อการพัฒนาระบบมาตรวิทยา</span> (<span id="preview-bankAccountNameEN">The Fund for National Metrology System Development</span>)</li>
+            <li><strong>ธนาคาร:</strong> <span id="preview-bankBankName">บมจ. ธนาคารกรุงไทย สาขารังสิต-นครนายก คลอง 4</span></li>
+            <li><strong>เลขที่บัญชี:</strong> <span id="preview-bankAccountNo" class="font-medium">148-0-11593-2</span> (บัญชีออมทรัพย์)</li>
+        </ul>
+    </li>
+</ul>
+<p class="text-xs text-slate-500 italic mb-4 bg-slate-50 p-2 rounded border border-slate-100">*(หมายเหตุ: กรณีมีค่าธรรมเนียมในการโอนเงิน ผู้ใช้บริการเป็นผู้รับผิดชอบ และสถาบันฯ ได้รับการยกเว้นการหักภาษี ณ ที่จ่าย 3%)*</p>
+
+<p><strong>สิ่งที่ทางหน่วยงานของท่านต้องดำเนินการ:</strong></p>
+<ol class="list-decimal pl-6 mb-4 space-y-2">
+    <li><strong>ยืนยันการจัดอบรม:</strong> หากทางหน่วยงานไม่ขัดข้องและได้รับอนุมัติจากต้นสังกัดเรียบร้อยแล้ว <strong>กรุณา Reply Email ฉบับนี้ เพื่อตอบรับยืนยันการจัดอบรม ภายในวันที่ <span id="preview-confirmDueDate" class="text-red-600 underline decoration-red-300 underline-offset-2">16 กุมภาพันธ์ 2569</span></strong> เพื่อให้ส่วนฝึกอบรมดำเนินการในส่วนที่เกี่ยวข้องต่อไป</li>
+    <li><strong>ส่งรายชื่อผู้เข้าอบรม:</strong> กรุณากรอกรายชื่อผู้เข้าอบรม (ภาษาไทยและภาษาอังกฤษ) และชื่อหน่วยงาน (ภาษาอังกฤษ) ลงในแบบฟอร์ม Excel ที่แนบมานี้ และส่งกลับมา <strong>ภายในวันที่ <span id="preview-paymentDueDate2" class="text-red-600 underline decoration-red-300 underline-offset-2">6 มีนาคม 2569</span></strong> เพื่อใช้สำหรับการจัดทำ Certificate</li>
+    <li><strong>การเดินทางของวิทยากร:</strong> ผู้ขอใช้บริการรับผิดชอบพาหนะการเดินทางของวิทยากร (สถานที่รับ-ส่ง กรุณาประสานงานวิทยากรโดยตรง หรือติดต่อผู้ประสานงาน โทร. 081 840 2902)</li>
+</ol>
+
+<p><strong>หมายเหตุสำคัญเกี่ยวกับใบเสร็จรับเงิน/ใบกำกับภาษี:</strong></p>
+<ul class="list-disc pl-6 mb-6 text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
+    <li>สถาบันฯ มีนโยบายลงวันที่ในใบเสร็จฯ/ใบกำกับภาษี เป็นวันที่ได้รับชำระเงินเท่านั้น</li>
+    <li>หากมีเงื่อนไขในการออกใบเสร็จฯ กรุณาแจ้งล่วงหน้าก่อนส่งหลักฐานการชำระเงิน (Pay in)</li>
+    <li>หากมีการขอแก้ไขใบเสร็จฯ ภายหลังที่ออกไปแล้ว จะต้องจ่ายค่าธรรมเนียมในการแก้ไข 107 บาท/ครั้ง</li>
+</ul>
+
+<p><strong>เอกสารที่ควรแนบไปกับอีเมลฉบับนี้:</strong></p>
+<ol class="list-decimal pl-6 mb-6 space-y-2">
+    <li>ใบแจ้งค่าธรรมเนียม (Bill Payment) <a href="#" id="preview-linkBill" class="text-blue-600 hover:text-blue-800 underline text-sm ml-2 font-medium bg-blue-50 px-2 py-0.5 rounded" style="display: none;" target="_blank">🔗 เปิดเอกสาร</a><span id="preview-attachBillFile" class="text-sm text-slate-500 ml-2" style="display: none;"></span></li>
+    <li>แบบฟอร์ม Excel สำหรับกรอกรายชื่อผู้เข้าอบรม <span class="text-slate-400 text-xs">(ตารางมีฟังก์ชันสำหรับตัวกรองข้อมูลได้)</span> <a href="#" id="preview-linkExcel" class="text-blue-600 hover:text-blue-800 underline text-sm ml-2 font-medium bg-blue-50 px-2 py-0.5 rounded" style="display: none;" target="_blank">🔗 เปิดเอกสาร</a><span id="preview-attachExcelFile" class="text-sm text-slate-500 ml-2" style="display: none;"></span></li>
+    <li>รายละเอียดหลักสูตร (Course Outline) <a href="#" id="preview-linkOutline" class="text-blue-600 hover:text-blue-800 underline text-sm ml-2 font-medium bg-blue-50 px-2 py-0.5 rounded" style="display: none;" target="_blank">🔗 เปิดเอกสาร</a><span id="preview-attachOutlineFile" class="text-sm text-slate-500 ml-2" style="display: none;"></span></li>
+</ol>
+
+<p>จึงเรียนมาเพื่อโปรดทราบ หากมีข้อสงสัยเพิ่มเติมสามารถติดต่อสอบถามได้ครับ ขอบพระคุณครับ</p>
+<br />
+<p>ขอแสดงความนับถือ</p>
+<br />
+<p id="preview-senderName" class="font-bold">กิจติยา แก้วมูล</p>
+<p id="preview-senderTitle" class="text-slate-600">กลุ่มงานพัฒนาธุรกิจ (อบรม) ฝ่ายนโยบายและยุทธศาสตร์</p>
+<p class="text-slate-600">สถาบันมาตรวิทยาแห่งชาติ (มว.)</p>
+<p class="text-slate-600">โทร. <span id="preview-senderPhone">02 026 5400 ต่อ 8301-3</span></p>
+<p class="text-slate-600">อีเมล: <span id="preview-senderEmail" class="text-blue-600">training@nimt.or.th</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script สำหรับควบคุมการทำงาน (ดึงของเดิมมาปรับปรุงระบบ Notification นิดหน่อย) -->
+    <script>
+        lucide.createIcons();
+
+        function showNotification(msg, isError = false) {
+            const status = document.getElementById('save-status');
+            status.innerText = msg;
+            status.className = `text-sm font-medium transition-opacity duration-300 opacity-100 ${isError ? 'text-red-600' : 'text-emerald-600'}`;
+            setTimeout(() => {
+                status.classList.remove('opacity-100');
+                status.classList.add('opacity-0');
+            }, 3000);
+        }
+
+        // ดึงพารามิเตอร์จาก query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramsToLoad = ['recipient_emails', 'recipientName', 'speakerName', 'trainingDate', 'attendeeCount'];
+        paramsToLoad.forEach(param => {
+            const val = urlParams.get(param);
+            if (val) {
+                // map param name to input ID (special case for recipient_emails)
+                let inputId = `input-${param}`;
+                if(param === 'recipient_emails') inputId = 'input-recipientEmails';
+                const el = document.getElementById(inputId);
+                if (el) el.value = decodeURIComponent(val);
+            }
+        });
+        // รับ booking_id ถ้ามี และใส่ลง input hidden
+        const bookingIdParam = urlParams.get('booking_id');
+        if (bookingIdParam) {
+            const bidEl = document.getElementById('input-bookingId');
+            if (bidEl) bidEl.value = bookingIdParam;
+        }
+
+        let previewEditing = false;
+        let initialPreviewHtml = '';
+        let initialFormValues = {};
+
+        updatePreview();
+        captureInitialFormState();
+
+        function captureInitialFormState() {
+            const formElements = document.querySelectorAll('#emailSendForm [id^="input-"]');
+            initialFormValues = {};
+            formElements.forEach(el => {
+                if (el.type === 'file') {
+                    initialFormValues[el.id] = '';
+                } else {
+                    initialFormValues[el.id] = el.value;
+                }
+            });
+            const content = document.getElementById('email-content');
+            if (content) initialPreviewHtml = content.innerHTML;
+        }
+
+        function toggleEditPreview() {
+            const content = document.getElementById('email-content');
+            const editBtn = document.getElementById('edit-preview-btn');
+            const editBtnText = document.getElementById('edit-preview-text');
+            const saveBtn = document.getElementById('save-preview-btn');
+            const alert = document.getElementById('edit-alert');
+
+            if (!previewEditing) {
+                content.contentEditable = true;
+                content.classList.add('editing-mode');
+                editBtnText.innerText = 'ยกเลิกแก้ไข';
+                editBtn.classList.replace('bg-slate-600', 'bg-red-500');
+                editBtn.classList.replace('hover:bg-slate-500', 'hover:bg-red-600');
+                editBtn.classList.replace('border-slate-500', 'border-red-600');
+                saveBtn.style.display = 'flex';
+                alert.classList.replace('hidden', 'flex');
+                previewEditing = true;
+            } else {
+                content.contentEditable = false;
+                content.classList.remove('editing-mode');
+                editBtnText.innerText = 'แก้ไขโครงสร้าง';
+                editBtn.classList.replace('bg-red-500', 'bg-slate-600');
+                editBtn.classList.replace('hover:bg-red-600', 'hover:bg-slate-500');
+                editBtn.classList.replace('border-red-600', 'border-slate-500');
+                saveBtn.style.display = 'none';
+                alert.classList.replace('flex', 'hidden');
+                previewEditing = false;
+                document.getElementById('input-customBody').value = '';
+                document.getElementById('input-useCustomBody').value = '0';
+                updatePreview(); // คืนค่าจากฟอร์ม
+            }
+        }
+
+        function savePreviewEdits() {
+            const content = document.getElementById('email-content');
+            content.contentEditable = false;
+            content.classList.remove('editing-mode');
+            
+            const editBtn = document.getElementById('edit-preview-btn');
+            document.getElementById('edit-preview-text').innerText = 'แก้ไขโครงสร้าง';
+            editBtn.classList.replace('bg-red-500', 'bg-slate-600');
+            editBtn.classList.replace('hover:bg-red-600', 'hover:bg-slate-500');
+            editBtn.classList.replace('border-red-600', 'border-slate-500');
+            
+            document.getElementById('save-preview-btn').style.display = 'none';
+            document.getElementById('edit-alert').classList.replace('flex', 'hidden');
+            previewEditing = false;
+
+            syncPreviewLinks();
+
+            const html = content.innerHTML;
+            document.getElementById('input-customBody').value = html;
+            document.getElementById('input-useCustomBody').value = '1';
+
+            showNotification('บันทึกโครงสร้างพรีวิวแล้ว');
+        }
+
+        function resetToInitialValues() {
+            const formElements = document.querySelectorAll('#emailSendForm [id^="input-"]');
+            formElements.forEach(el => {
+                if (el.id === 'input-customBody' || el.id === 'input-useCustomBody') return;
+                if (Object.prototype.hasOwnProperty.call(initialFormValues, el.id)) {
+                    if (el.type === 'file') el.value = '';
+                    else el.value = initialFormValues[el.id];
+                }
+            });
+            document.getElementById('input-customBody').value = '';
+            document.getElementById('input-useCustomBody').value = '0';
+            
+            const content = document.getElementById('email-content');
+            if (content) {
+                content.contentEditable = false;
+                content.classList.remove('editing-mode');
+                content.innerHTML = initialPreviewHtml;
+            }
+            
+            const editBtn = document.getElementById('edit-preview-btn');
+            document.getElementById('edit-preview-text').innerText = 'แก้ไขโครงสร้าง';
+            editBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-slate-600 text-slate-200 hover:bg-slate-500 border border-slate-500';
+            document.getElementById('save-preview-btn').style.display = 'none';
+            document.getElementById('edit-alert').classList.replace('flex', 'hidden');
+            previewEditing = false;
+            
+            updatePreview();
+            showNotification('คืนค่าเริ่มต้นเรียบร้อย');
+        }
+
+        function syncPreviewLinks() {
+            const linkNames = ['linkBill', 'linkExcel', 'linkOutline'];
+            const attachNames = ['attachBill', 'attachExcel', 'attachOutline'];
+            
+            linkNames.forEach((linkName, idx) => {
+                const urlEl = document.getElementById(`input-${linkName}`);
+                const url = urlEl ? (urlEl.value || '') : '';
+                const aTag = document.getElementById(`preview-${linkName}`);
+                const fileInput = document.getElementById(`input-${attachNames[idx]}`);
+                const filePreviewText = document.getElementById(`preview-${attachNames[idx]}Name`);
+                const statusBadge = document.getElementById(`status-${linkName}`);
+
+                if (aTag) {
+                    if (url.trim() !== '') {
+                        aTag.href = url;
+                        aTag.style.display = 'inline';
+                    } else {
+                        aTag.style.display = 'none';
+                    }
+                }
+
+                const fileName = (fileInput && fileInput.files && fileInput.files.length) ? fileInput.files[0].name : '';
+                if (filePreviewText) filePreviewText.innerText = fileName ? fileName : 'ไม่มีไฟล์';
+
+                if (statusBadge) {
+                    if (url.trim() !== '') {
+                        statusBadge.innerText = 'มีลิงก์';
+                        statusBadge.className = 'inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium';
+                    } else if (fileName) {
+                        statusBadge.innerText = 'มีไฟล์แนบ';
+                        statusBadge.className = 'inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium';
+                    } else {
+                        statusBadge.innerText = 'ยังไม่ได้แนบ';
+                        statusBadge.className = 'inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 font-medium';
+                    }
+                }
+            });
+        }
+
+        function updatePreview() {
+            const contentEl = document.getElementById('email-content');
+            if (contentEl && contentEl.isContentEditable) {
+                syncPreviewLinks();
+                return;
+            }
+            
+            const fields = [
+                'subject', 'recipientName', 'courseName', 'trainingDate', 
+                'attendeeCount', 'speakerName', 'speakerPhone', 
+                'feeAmount', 'paymentDueDate', 'confirmDueDate',
+                'bankAccountNameEN', 'bankAccountNameTH', 'bankBankName', 'bankAccountNo',
+                'senderName', 'senderTitle', 'senderPhone', 'senderEmail'
+            ];
+
+            fields.forEach(field => {
+                const inputValue = document.getElementById(`input-${field}`).value;
+                const previewElement = document.getElementById(`preview-${field}`);
+                if (previewElement) previewElement.innerText = inputValue;
+            });
+
+            const payment2 = document.getElementById('preview-paymentDueDate2');
+            if(payment2) payment2.innerText = document.getElementById('input-paymentDueDate').value;
+
+            syncPreviewLinks();
+        }
+
+        function copyToClipboard() {
+            const emailContent = document.getElementById('email-content');
+            const range = document.createRange();
+            range.selectNode(emailContent);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('copy-btn');
+                const text = document.getElementById('copy-text');
+
+                btn.classList.replace('text-slate-800', 'text-emerald-700');
+                text.innerText = 'คัดลอกสำเร็จ!';
+                
+                setTimeout(() => {
+                    btn.classList.replace('text-emerald-700', 'text-slate-800');
+                    text.innerText = 'คัดลอก (Copy)';
+                    selection.removeAllRanges();
+                }, 2000);
+
+            } catch (err) {
+                console.error('ไม่สามารถคัดลอกได้', err);
+                showNotification('คัดลอกไม่สำเร็จ', true);
+            }
+        }
+
+        function saveDefaults() {
+            const inputs = document.querySelectorAll('[id^="input-"]');
+            const payload = {};
+            inputs.forEach(el => {
+                const key = el.id.replace('input-', '');
+                if (el.tagName.toLowerCase() === 'input' || el.tagName.toLowerCase() === 'textarea') {
+                    payload[key] = el.value;
+                }
+            });
+
+            showNotification('กำลังบันทึกข้อมูล...');
+
+            fetch('save_email_defaults.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(r => r.json())
+            .then(j => {
+                if (j.success) {
+                    showNotification('บันทึกค่าเริ่มต้นเรียบร้อยแล้ว');
+                } else {
+                    showNotification('บันทึกไม่สำเร็จ: ' + (j.message || ''), true);
+                }
+            }).catch(err => {
+                showNotification('เกิดข้อผิดพลาดในการบันทึก', true);
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>

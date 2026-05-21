@@ -9,6 +9,15 @@
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         .table-custom th, .table-custom td { border: 1px solid #94a3b8; padding: 6px; text-align: center; }
+        
+        /* ปรับขนาด Checkbox และ Radio ให้ใหญ่ขึ้นและสวยงาม */
+        .form-checkbox, .form-radio {
+            width: 1.25rem; /* ขนาด 20px */
+            height: 1.25rem; /* ขนาด 20px */
+            cursor: pointer;
+            flex-shrink: 0; /* ป้องกันกล่องหดตัวเมื่อข้อความยาว */
+            accent-color: #1e3a8a; /* เปลี่ยนสีตอนติ๊กเป็นสีน้ำเงินเข้ม */
+        }
     </style>
     <script>
         const storageKey = 'form_data_' + window.location.pathname.split('/').pop();
@@ -43,7 +52,7 @@
         document.addEventListener('submit', () => localStorage.removeItem(storageKey));
     </script>
 </head>
-<body class="bg-slate-50 p-4 md:p-10" onchange="saveFormData()" oninput="saveFormData()">
+<body class="bg-slate-50 p-4 md:p-10" onchange="saveFormData()" oninput="saveFormData()" data-pricing-page="Metrology_services_TH">
     <form action="save_all_data.php" method="POST">
         <input type="hidden" name="category" value="Metrology-TH">
         <div class="max-w-4xl mx-auto bg-white p-12 shadow-lg border border-gray-200">
@@ -84,29 +93,29 @@
                             <td class="text-left">ค่าพาหนะ</td>
                             <td class="p-0">
                                 <div class="grid grid-cols-2 h-full">
-                                    <div class="border-r border-gray-400 p-2">ค่าเช่าพาหนะ<br>2,500 บาท</div>
-                                    <div class="p-2">ค่าน้ำมันต่อกิโลเมตร<br>6 บาท</div>
+                                    <div class="border-r border-gray-400 p-2">ค่าเช่าพาหนะ<br><span data-price-key="vehicle_rental">2,500 บาท</span></div>
+                                    <div class="p-2">ค่าน้ำมันต่อกิโลเมตร<br><span data-price-key="fuel_per_km">6 บาท</span></div>
                                 </div>
                             </td>
-                            <td>ค่าตั๋วเครื่องบิน (ไป-กลับ)<br>15,000 บาท</td>
+                            <td>ค่าตั๋วเครื่องบิน (ไป-กลับ)<br><span data-price-key="air_travel">15,000 บาท</span></td>
                         </tr>
                         <tr>
                             <td class="text-left">ค่าที่พัก (ต่อคนต่อคืน)</td>
-                            <td colspan="2">1,600 บาท</td>
+                            <td colspan="2" data-price-key="accommodation">1,600 บาท</td>
                         </tr>
                         <tr class="font-bold bg-gray-50"><td colspan="3" class="text-left">จัดฝึกอบรม ณ สถาบันมาตรวิทยาแห่งชาติ</td></tr>
                         <tr>
                             <td class="text-left">ค่าอาหารและเครื่องดื่ม (ต่อคนต่อวัน)</td>
-                            <td colspan="2">900 บาท</td>
+                            <td colspan="2" data-price-key="food_per_person">900 บาท</td>
                         </tr>
                         <tr>
                             <td class="text-left">ค่าบริการใช้ห้องอบรม และอุปกรณ์ต่างๆ (ต่อวัน)</td>
                             <td colspan="2" class="p-0 text-[10px]">
                                 <div class="grid grid-cols-4 h-full">
-                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 20 คน<br>3,210 บาท</div>
-                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 30 คน<br>4,815 บาท</div>
-                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 40 คน<br>5,350 บาท</div>
-                                    <div class="p-1">ไม่เกิน 60 คน<br>6,420 บาท</div>
+                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 20 คน<br><span data-price-key="room_20">3,210 บาท</span></div>
+                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 30 คน<br><span data-price-key="room_30">4,815 บาท</span></div>
+                                    <div class="border-r border-gray-400 p-1">ไม่เกิน 40 คน<br><span data-price-key="room_40">5,350 บาท</span></div>
+                                    <div class="p-1">ไม่เกิน 60 คน<br><span data-price-key="room_60">6,420 บาท</span></div>
                                 </div>
                             </td>
                         </tr>
@@ -119,8 +128,9 @@
                 <div>
                     <p class="font-bold mb-2">กรณีต้องการให้สถาบันฯ เป็นผู้ดำเนินการจัดหาบริการพาหนะเดินทาง ที่พัก อาหารและเครื่องดื่ม</p>
                     <div class="flex gap-8 ml-4">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="arrange_service" value="ต้องการ" required> ต้องการขอใช้บริการ</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="arrange_service" value="ไม่ต้องการ"> ไม่ต้องการขอใช้บริการ</label>
+                        <!-- เพิ่ม class form-radio -->
+                        <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="arrange_service" value="ต้องการ" class="form-radio" required> ต้องการขอใช้บริการ</label>
+                        <label class="flex items-center gap-3 cursor-pointer"><input type="radio" name="arrange_service" value="ไม่ต้องการ" class="form-radio"> ไม่ต้องการขอใช้บริการ</label>
                     </div>
                 </div>
 
@@ -128,14 +138,16 @@
                     <p class="font-bold underline italic">เลือกบริการที่ต้องการ</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-slate-50 p-4 border border-slate-200 rounded">
-                            <p class="font-bold border-b mb-2 pb-1 text-xs uppercase">ณ สถานที่ประกอบการของหน่วยงานผู้ใช้บริการ</p>
-                            <label class="flex items-center gap-2 mb-2"><input type="checkbox" name="site_vehicle" value="ใช่"> พาหนะ</label>
-                            <label class="flex items-start gap-2"><input type="checkbox" name="site_hotel" value="ใช่" class="mt-1"> <span>ที่พัก (ยกเว้นอาหารกลางวันของวิทยากรผู้ขอใช้บริการเป็นผู้จัดหา)</span></label>
+                            <p class="font-bold border-b mb-3 pb-1 text-xs uppercase">ณ สถานที่ประกอบการของหน่วยงานผู้ใช้บริการ</p>
+                            <!-- เพิ่ม class form-checkbox -->
+                            <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" name="site_vehicle" value="ใช่" class="form-checkbox"> พาหนะ</label>
+                            <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" name="site_hotel" value="ใช่" class="form-checkbox mt-0.5"> <span class="leading-snug">ที่พัก <br><span class="text-xs text-gray-500 font-normal">(ยกเว้นอาหารกลางวันของวิทยากรผู้ขอใช้บริการเป็นผู้จัดหา)</span></span></label>
                         </div>
                         <div class="bg-slate-50 p-4 border border-slate-200 rounded">
-                            <p class="font-bold border-b mb-2 pb-1 text-xs uppercase">ณ สถาบันมาตรวิทยาแห่งชาติ</p>
-                            <label class="flex items-center gap-2 mb-2"><input type="checkbox" name="nimt_room" value="ใช่"> ห้องอบรม และอุปกรณ์ต่างๆ</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="nimt_food" value="ใช่"> อาหารและเครื่องดื่ม</label>
+                            <p class="font-bold border-b mb-3 pb-1 text-xs uppercase">ณ สถาบันมาตรวิทยาแห่งชาติ</p>
+                            <!-- เพิ่ม class form-checkbox -->
+                            <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" name="nimt_room" value="ใช่" class="form-checkbox"> ห้องอบรม และอุปกรณ์ต่างๆ</label>
+                            <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" name="nimt_food" value="ใช่" class="form-checkbox"> อาหารและเครื่องดื่ม</label>
                         </div>
                     </div>
                 </div>
@@ -143,25 +155,37 @@
 
             <div class="border-t-2 border-gray-200 pt-6 space-y-4">
                 <div>
-                    <p class="font-bold text-[11px] mb-2 underline">หมายเหตุ:</p>
-                    <div class="text-[11px] italic space-y-2 font-semibold ml-4">
-                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> สถาบันมาตรวิทยาแห่งชาติ ขอสงวนสิทธิ์ในการจัดสรรวิทยากรตามความเหมาะสม</label>
-                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> สถาบันฯ จะสรุปรายละเอียดค่าธรรมเนียมอบรมนอกสถานที่ เพื่อยืนยันการขอใช้บริการและชำระเงิน ผ่าน e-mail ผู้ติดต่อ</label>
-                        <label class="flex items-start gap-2"><input type="checkbox" class="mt-1" required> อัตราค่าธรรมเนียมนี้เป็นอัตราที่กำหนดตามระเบียบของสถาบันฯ ไม่สามารถเปลี่ยนแปลงหรือปรับลดได้</label>
+                    <p class="font-bold text-[12px] mb-3 underline">หมายเหตุ:</p>
+                    <!-- ปรับแต่ง gap และขนาดฟอนต์ให้เข้ากับ Checkbox ใหญ่ -->
+                    <div class="text-[12px] italic space-y-3 font-semibold ml-4">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" class="form-checkbox mt-0.5" required> 
+                            <span>สถาบันมาตรวิทยาแห่งชาติ ขอสงวนสิทธิ์ในการจัดสรรวิทยากรตามความเหมาะสม</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" class="form-checkbox mt-0.5" required> 
+                            <span>สถาบันฯ จะสรุปรายละเอียดค่าธรรมเนียมอบรมนอกสถานที่ เพื่อยืนยันการขอใช้บริการและชำระเงิน ผ่าน e-mail ผู้ติดต่อ</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" class="form-checkbox mt-0.5" required> 
+                            <span>อัตราค่าธรรมเนียมนี้เป็นอัตราที่กำหนดตามระเบียบของสถาบันฯ ไม่สามารถเปลี่ยนแปลงหรือปรับลดได้</span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="bg-blue-50 p-4 border-l-4 border-blue-900 mt-6">
-                    <p class="font-bold text-xs mb-2">การเปิดเผยข้อมูลแก่สถาบันมาตรวิทยาแห่งชาติ</p>
-                    <label class="flex items-center gap-2 text-xs font-bold italic cursor-pointer">
-                        <input type="radio" name="privacy_consent" value="ยินยอม" required> ข้าพเจ้ายินยอมเปิดเผยข้อมูล เพื่อใช้ในการติดต่อประสานงานและออกใบเสร็จรับเงิน/ใบกำกับภาษี
+                <!-- ปรับแต่งกล่องการเปิดเผยข้อมูลให้ดูเด่นขึ้นเล็กน้อย -->
+                <div class="bg-blue-50 p-5 border-l-4 border-blue-900 mt-6 rounded-r-lg shadow-sm">
+                    <p class="font-bold text-[13px] mb-3 text-blue-900">การเปิดเผยข้อมูลแก่สถาบันมาตรวิทยาแห่งชาติ</p>
+                    <label class="flex items-start gap-3 text-[13px] font-bold italic cursor-pointer">
+                        <input type="radio" name="privacy_consent" value="ยินยอม" class="form-radio mt-0.5" required> 
+                        <span class="leading-snug">ข้าพเจ้ายินยอมเปิดเผยข้อมูล เพื่อใช้ในการติดต่อประสานงานและออกใบเสร็จรับเงิน/ใบกำกับภาษี</span>
                     </label>
                 </div>
             </div>
 
             <div class="mt-10 flex justify-center gap-4">
                 <a href="metrology_form.html" onclick="saveFormData()" class="bg-gray-400 text-white px-8 py-2 rounded shadow hover:bg-gray-500 font-bold transition">ย้อนกลับ</a>
-                <button type="submit" class="bg-green-900 text-white px-10 py-2 rounded shadow hover:bg-green-800 font-bold transition">ส่งแบบคำขอรับคำปรึกษา</button>
+                <button type="submit" class="bg-blue-900 text-white px-10 py-2 rounded shadow hover:bg-blue-800 font-bold transition">ส่งแบบคำขอรับคำปรึกษา</button>
             </div>
             
             <div class="flex justify-between items-end text-[10px] text-gray-500 mt-8 pt-4 border-t border-gray-200">
@@ -170,5 +194,6 @@
             </div>
         </div>
     </form>
+    <script src="pricing_loader.js"></script>
 </body>
 </html>

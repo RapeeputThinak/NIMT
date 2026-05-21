@@ -1,0 +1,105 @@
+{
+    "Inhouse_form_TH": {
+        "theoretical_up_to_20": "32,100 บาท",
+        "additional_per_person": "1,605 บาท",
+        "practical_bundle_price": "2,140 บาท",
+        "practical_1_to_7": "26,750 บาท",
+        "practical_8_to_15": "32,100 บาท"
+    },
+    "Inhouse_form_EN": {
+        "theoretical_up_to_20": "60,000 Baht",
+        "additional_per_person": "3,000 Baht",
+        "practical_bundle_price": "4,000 Baht",
+        "practical_1_to_7": "50,000 Baht",
+        "practical_8_to_15": "60,000 Baht"
+    },
+    "Metrology_form_TH": {
+        "vehicle_rental": "2,500 บาท",
+        "fuel_per_km": "6 บาท",
+        "air_travel": "15,000 บาท",
+        "accommodation": "1,600 บาท",
+        "food_per_person": "900 บาท",
+        "room_20": "3,210 บาท",
+        "room_30": "4,815 บาท",
+        "room_40": "5,350 บาท",
+        "room_60": "6,420 บาท"
+    },
+    "Metrology_form_EN": {
+        "consulting_fee": "7,704 THB",
+        "additional_person_fee": "1,070 THB"
+    },
+    "Academic_form_TH": {
+        "up_to_60_people": "25,680 บาท",
+        "more_than_60_up_to_120": "29,960 บาท"
+    },
+    "Academic_form_EN": {
+        "up_to_60_people": "25,680 THB",
+        "more_than_60_up_to_120": "29,960 THB"
+    },
+    "Inhouse_services_TH": {
+        "vehicle_rental": "2,500 บาท",
+        "fuel_per_km": "6 บาท",
+        "air_travel": "15,000 บาท",
+        "accommodation": "1,600 บาท",
+        "food_per_person": "900 บาท",
+        "room_20": "3,210 บาท",
+        "room_30": "4,815 บาท",
+        "room_40": "5,350 บาท",
+        "room_60": "6,420 บาท"
+    },
+    "Inhouse_services_EN": {
+        "vehicle_rental": "2,336.45 THB",
+        "fuel_per_km": "5.61 THB",
+        "air_travel": "14,018.69 THB",
+        "accommodation": "1,495.33 THB",
+        "food_per_person": "841.12 THB",
+        "room_20": "3,000 THB",
+        "room_30": "4,500 THB",
+        "room_40": "5,000 THB",
+        "room_60": "6,000 THB"
+    },
+    "Metrology_services_TH": {
+        "vehicle_rental": "2,500 บาท",
+        "fuel_per_km": "6 บาท",
+        "air_travel": "15,000 บาท",
+        "accommodation": "1,600 บาท",
+        "food_per_person": "900 บาท",
+        "room_20": "3,210 บาท",
+        "room_30": "4,815 บาท",
+        "room_40": "5,350 บาท",
+        "room_60": "6,420 บาท"
+    },
+    "Metrology_services_EN": {
+        "vehicle_rental": "2,336.45 THB",
+        "fuel_per_km": "5.61 THB",
+        "air_travel": "14,018.69 THB",
+        "accommodation": "1,495.33 THB",
+        "food_per_person": "841.12 THB",
+        "room_20": "3,000 THB",
+        "room_30": "4,500 THB",
+        "room_40": "5,000 THB",
+        "room_60": "6,000 THB"
+    },
+    "Academic_services_TH": {
+        "vehicle_rental": "2,500 บาท",
+        "fuel_per_km": "6 บาท",
+        "air_travel": "15,000 บาท",
+        "accommodation": "1,600 บาท",
+        "food_per_person": "900 บาท",
+        "room_20": "3,210 บาท",
+        "room_30": "4,815 บาท",
+        "room_40": "5,350 บาท",
+        "room_60": "6,420 บาท"
+    },
+    "Academic_services_EN": {
+        "vehicle_rental": "2,336.45 THB",
+        "fuel_per_km": "5.61 THB",
+        "air_travel": "14,018.69 THB",
+        "accommodation": "1,495.33 THB",
+        "food_per_person": "841.12 THB",
+        "room_20": "3,000 THB",
+        "room_30": "4,500 THB",
+        "room_40": "5,000 THB",
+        "room_60": "6,000 THB"
+    }
+}

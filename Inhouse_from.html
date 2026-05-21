@@ -117,7 +117,7 @@
         }
     </script>
 </head>
-<body class="bg-gray-100 p-4 md:p-10">
+<body class="bg-gray-100 p-4 md:p-10" data-pricing-page="Inhouse_form_TH">
 
 <div class="max-w-4xl mx-auto my-10 bg-white shadow-xl rounded-lg border border-gray-200">
 
@@ -165,24 +165,21 @@
                     <tr>
                         <td class="border border-gray-200 p-3 text-center font-bold">ก</td>
                         <td class="border border-gray-200 p-3">หลักสูตรภาคทฤษฎี (ไม่เกิน 20 คน)</td>
-                        <td class="border border-gray-200 p-3 text-right">32,100 บาท</td>
-                        <td class="border border-gray-200 p-3 text-right">1,605 บาท</td>
+                        <td class="border border-gray-200 p-3 text-right" data-price-key="theoretical_up_to_20">32,100 บาท</td>
+                        <td class="border border-gray-200 p-3 text-right" data-price-key="additional_per_person">1,605 บาท</td>
                     </tr>
                     <tr>
                         <td rowspan="2" class="border border-gray-200 p-3 text-center font-bold">ข</td>
                         <td class="border border-gray-200 p-3 italic">หลักสูตรภาคทฤษฎีและปฏิบัติ</td>
                         <td class="border border-gray-200 p-3 text-right"></td>
-                        <td rowspan="2" class="border border-gray-200 p-3 text-right">2,140 บาท</td>
+                        <td rowspan="2" class="border border-gray-200 p-3 text-right" data-price-key="practical_bundle_price">2,140 บาท</td>
                     </tr>
                     <tr>
                         <td class="border border-gray-200 p-3 pl-6">
                             - จำนวนผู้เข้าอบรม 1 - 7 คน<br>
                             - จำนวนผู้เข้าอบรม 8 - 15 คน
                         </td>
-                        <td class="border border-gray-200 p-3 text-right">
-                            26,750 บาท<br>
-                            32,100 บาท
-                        </td>
+                        <td class="border border-gray-200 p-3 text-right"><span data-price-key="practical_1_to_7">26,750 บาท</span><br><span data-price-key="practical_8_to_15">32,100 บาท</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -318,7 +315,7 @@
                         </div>
                         <div class="field-group">
                             <label class="field-label">เลขที่อ้างอิง</label>
-                            <input type="text" name="ref_no" class="field-input bg-gray-50 text-gray-500" readonly placeholder="สำหรับเจ้าหน้าที่">
+                            <input type="text" name="ref_no" class="field-input bg-black-50 text-black-500" placeholder="สำหรับเจ้าหน้าที่">
                         </div>
                     </div>
                 </div>
@@ -457,5 +454,6 @@
         });
     });
 </script>
+    <script src="pricing_loader.js"></script>
 </body>
 </html> 
